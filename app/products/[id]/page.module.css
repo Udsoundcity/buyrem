@@ -1,0 +1,10 @@
+.page{background:var(--cream)}
+.finalCta{background:var(--cream);padding:90px 0;border-top:1px solid rgba(196,113,74,0.12)}
+.finalInner{text-align:center}
+.finalTitle{font-family:'DM Serif Display',serif;font-size:clamp(32px,4.5vw,52px);color:var(--brown);margin-bottom:14px;line-height:1.15}
+.finalTitle em{color:var(--terra);font-style:italic}
+.finalSub{font-size:17px;color:var(--text-m);line-height:1.7;max-width:520px;margin:0 auto 36px}
+.finalActions{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.finalPrice{font-family:'DM Serif Display',serif;font-size:48px;color:var(--terra);line-height:1}
+.finalTrust{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.pill{font-size:13px;font-weight:500;color:var(--text-m);background:white;padding:8px 16px;border-radius:100px;border:1px solid rgba(196,113,74,0.14)}

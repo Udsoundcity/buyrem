@@ -1,0 +1,120 @@
+.section {
+  background: var(--brown);
+  padding: 60px 0;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.left { flex: 1; min-width: 240px; }
+
+.fireRow {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blush-d);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 3.5vw, 38px);
+  color: var(--cream);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.sub {
+  font-size: 15px;
+  color: rgba(250,245,238,0.6);
+  line-height: 1.6;
+}
+
+/* Timer */
+.timerWrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.block {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.colon {
+  font-family: 'DM Serif Display', serif;
+  font-size: 40px;
+  color: var(--blush-d);
+  padding: 0 6px;
+  margin-bottom: 20px;
+}
+
+.num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 56px;
+  font-weight: 400;
+  color: var(--cream);
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 10px 18px;
+  min-width: 86px;
+  text-align: center;
+  line-height: 1;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(250,245,238,0.5);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Price block */
+.priceBlock {
+  text-align: center;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 28px 36px;
+}
+
+.nowLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--blush-d);
+  margin-bottom: 8px;
+}
+
+.nowPrice {
+  font-family: 'DM Serif Display', serif;
+  font-size: 44px;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.wasPrice {
+  font-size: 15px;
+  color: rgba(250,245,238,0.4);
+  text-decoration: line-through;
+}
+
+@media (max-width: 900px) {
+  .inner { flex-direction: column; text-align: center; }
+  .timerWrap { justify-content: center; }
+  .num { font-size: 44px; min-width: 70px; padding: 8px 14px; }
+}

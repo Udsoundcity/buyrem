@@ -1,0 +1,200 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44,24,16,0.55);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: #fff;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 28px 28px 0 0;
+  padding: 28px 28px 36px;
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  background: rgba(196,113,74,0.2);
+  border-radius: 2px;
+  margin: 0 auto 22px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.productRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.productEmoji {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.productName {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+  color: var(--brown);
+  line-height: 1.25;
+}
+
+.productPrice {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--terra);
+  margin-top: 3px;
+}
+
+.closeBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(196,113,74,0.1);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-m);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.closeBtn:hover { background: rgba(196,113,74,0.2); }
+
+.group { margin-bottom: 14px; }
+
+.label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-m);
+  margin-bottom: 7px;
+}
+
+.req { color: var(--terra); }
+
+.optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-f);
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1.5px solid rgba(196,113,74,0.18);
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text);
+  background: var(--cream);
+  outline: none;
+  transition: border 0.2s, background 0.2s;
+}
+.input:focus, .textarea:focus {
+  border-color: var(--terra);
+  background: #fff;
+}
+.inputError { border-color: #E84A4A !important; }
+
+.textarea { resize: vertical; min-height: 76px; }
+
+.err { font-size: 11px; color: #E84A4A; margin-top: 4px; }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.qtyRow { display: flex; align-items: center; gap: 14px; }
+
+.qtyBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(196,113,74,0.25);
+  background: white;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--terra);
+  transition: all 0.2s;
+}
+.qtyBtn:hover { background: var(--terra); color: #fff; border-color: var(--terra); }
+
+.qtyNum {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  color: var(--brown);
+  min-width: 28px;
+  text-align: center;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--terra-dim);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 18px 0;
+}
+.totalLabel { font-size: 13px; font-weight: 600; color: var(--text-m); }
+.totalAmount { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--terra); }
+
+.submitBtn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 100px;
+  background: #25D366;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.submitBtn:hover { background: #1ebe5d; transform: translateY(-1px); box-shadow: 0 10px 28px rgba(37,211,102,.35); }
+
+.note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-f);
+  margin-top: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 580px) {
+  .modal { padding: 22px 18px 30px; border-radius: 24px 24px 0 0; }
+  .row { grid-template-columns: 1fr; }
+}

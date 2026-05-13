@@ -1,0 +1,14 @@
+.header{background:var(--warm);padding:64px 0 48px;border-bottom:1px solid rgba(196,113,74,0.1)}
+.title{font-family:'DM Serif Display',serif;font-size:clamp(38px,5vw,58px);color:var(--brown);margin-bottom:14px}
+.title em{color:var(--terra);font-style:italic}
+.sub{font-size:16px;color:var(--text-m);line-height:1.7;max-width:540px;margin-bottom:36px}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.filter{display:flex;align-items:center;gap:7px;padding:10px 22px;border-radius:100px;font-size:14px;font-weight:600;border:2px solid rgba(196,113,74,0.18);cursor:pointer;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif;background:white;color:var(--text-m)}
+.filter:hover{border-color:var(--terra);color:var(--terra)}
+.filterActive{background:var(--terra);color:#fff;border-color:var(--terra)}
+.grid{padding:52px 0 90px;background:var(--cream)}
+.count{font-size:14px;color:var(--text-f);margin-bottom:28px}
+.count strong{color:var(--terra)}
+.productsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+@media(max-width:900px){.productsGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:580px){.productsGrid{grid-template-columns:1fr}}

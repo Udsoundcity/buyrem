@@ -1,0 +1,237 @@
+.page {
+  background: var(--cream);
+  min-height: 60vh;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--warm);
+  padding: 60px 0 48px;
+  border-bottom: 1px solid rgba(196,113,74,0.12);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-m);
+  margin-bottom: 20px;
+}
+
+.breadcrumb a {
+  color: var(--terra);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+.breadcrumb a:hover { opacity: 0.75; }
+
+.breadcrumb span { color: var(--text-f); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--terra-dim);
+  border: 1px solid var(--terra-border);
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--terra);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 5vw, 54px);
+  color: var(--brown);
+  margin-bottom: 14px;
+  line-height: 1.1;
+}
+
+.title em { color: var(--terra); font-style: italic; }
+
+.meta {
+  font-size: 13px;
+  color: var(--text-f);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── Body ── */
+.body {
+  padding: 64px 0 80px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+/* Sidebar TOC */
+.toc {
+  position: sticky;
+  top: 88px;
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid rgba(196,113,74,0.1);
+}
+
+.tocTitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 16px;
+}
+
+.tocLink {
+  display: block;
+  font-size: 13px;
+  color: var(--text-m);
+  text-decoration: none;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(196,113,74,0.07);
+  transition: color 0.2s;
+  line-height: 1.4;
+  font-weight: 500;
+}
+.tocLink:last-child { border: none; }
+.tocLink:hover { color: var(--terra); }
+
+/* Content */
+.content { max-width: 720px; }
+
+.section {
+  margin-bottom: 52px;
+  padding-bottom: 52px;
+  border-bottom: 1px solid rgba(196,113,74,0.08);
+}
+.section:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+
+.sectionNum {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 8px;
+}
+
+.sectionTitle {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  color: var(--brown);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.text {
+  font-size: 15px;
+  color: var(--text-m);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.text:last-child { margin-bottom: 0; }
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 15px;
+  color: var(--text-m);
+  line-height: 1.6;
+}
+
+.list li::before {
+  content: '✓';
+  color: var(--terra);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.highlight {
+  background: var(--terra-dim);
+  border-left: 3px solid var(--terra);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 15px;
+  color: var(--brown);
+  line-height: 1.7;
+  font-weight: 500;
+}
+
+.bold { font-weight: 700; color: var(--brown); }
+
+/* ── Contact banner ── */
+.contactBanner {
+  background: var(--brown);
+  border-radius: 20px;
+  padding: 36px;
+  text-align: center;
+  margin-top: 52px;
+}
+
+.contactBanner h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  color: var(--cream);
+  margin-bottom: 10px;
+}
+
+.contactBanner p {
+  font-size: 14px;
+  color: rgba(250,245,238,0.6);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.contactBanner a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #25D366;
+  color: white;
+  padding: 13px 28px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.contactBanner a:hover { background: #1ebe5d; transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .toc { display: none; }
+  .header { padding: 48px 0 36px; }
+  .body { padding: 48px 0 60px; }
+}

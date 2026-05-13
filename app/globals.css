@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cream: #FAF5EE;
+  --warm:  #FFF9F4;
+  --terra:     #C4714A;
+  --terra-l:   #E8956D;
+  --terra-dim: rgba(196,113,74,0.12);
+  --terra-border: rgba(196,113,74,0.2);
+  --brown:   #5C3D2E;
+  --brown-l: #7A5240;
+  --blush:   #F2D5C4;
+  --blush-d: #E8B99A;
+  --sage:    #8B9E7A;
+  --dark:    #2C1810;
+  --text:    #3D2314;
+  --text-m:  #7A5240;
+  --text-f:  rgba(61,35,20,0.45);
+  --radius:  20px;
+  --shadow:  0 4px 24px rgba(196,113,74,0.10);
+  --shadow-lg: 0 16px 48px rgba(196,113,74,0.15);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--blush-d); border-radius: 3px; }
+
+/* ── Shared layout ── */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--terra);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.22s;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  background: var(--terra-l);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(196,113,74,0.35);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--brown);
+  padding: 14px 32px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 2px solid rgba(92,61,46,0.22);
+  cursor: pointer;
+  transition: all 0.22s;
+  text-decoration: none;
+}
+.btn-secondary:hover { border-color: var(--terra); color: var(--terra); }
+
+.btn-wa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #25D366;
+  color: #fff;
+  padding: 16px 36px;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.22s;
+  text-decoration: none;
+}
+.btn-wa:hover {
+  background: #1ebe5d;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(37,211,102,0.38);
+}
+
+/* ── Section headings ── */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.sec-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--brown);
+  margin-bottom: 16px;
+}
+.sec-title em { color: var(--terra); font-style: italic; }
+
+.sec-sub {
+  font-size: 16px;
+  color: var(--text-m);
+  line-height: 1.7;
+  max-width: 560px;
+  font-weight: 400;
+}
+
+/* ── Animations ── */
+@keyframes blink     { 0%,100%{opacity:1}50%{opacity:.3} }
+@keyframes bob       { 0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)} }
+@keyframes pulse-ring{ 0%{transform:scale(1);opacity:.6}100%{transform:scale(1.5);opacity:0} }
+@keyframes fadeUp    { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+@keyframes slideDown { from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)} }
+
+/* ── Float WhatsApp ── */
+.float-wa {
+  position: fixed;
+  bottom: 26px;
+  right: 26px;
+  z-index: 400;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  text-decoration: none;
+  box-shadow: 0 8px 28px rgba(37,211,102,.45);
+  animation: bob 3s ease-in-out infinite;
+  transition: transform 0.2s;
+}
+.float-wa:hover { transform: scale(1.12) !important; }
+
+@media (max-width: 900px) {
+  .container { padding: 0 20px; }
+}
