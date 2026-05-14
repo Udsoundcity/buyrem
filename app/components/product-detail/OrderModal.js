@@ -130,7 +130,7 @@ Please confirm my order. Thank you! 🙏`;
 
         {/* Submit */}
         <button className={styles.submitBtn} onClick={handleSubmit}>
-          💬 Send Order via WhatsApp
+          <i class="fa-solid fa-cart-shopping text-sm"></i> Send Order via WhatsApp
         </button>
         <p className={styles.note}>
           Opens WhatsApp with your order details ready to send.<br />

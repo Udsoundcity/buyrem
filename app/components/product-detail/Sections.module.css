@@ -42,7 +42,9 @@
 .imgMain { grid-column: span 2; }
 .imgCard { border-radius: 20px; overflow: hidden; border: 1px solid rgba(196,113,74,0.1); transition: all 0.3s; cursor: pointer; }
 .imgCard:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(196,113,74,0.15); }
-.imgEmoji { width:100%; aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; font-size:64px; }
+.imgWrap { width: 100%; aspect-ratio: 4/3; position: relative; overflow: hidden; }
+.imgPhoto { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
+.imgCard:hover .imgPhoto { transform: scale(1.06); }
 .imgLabel { padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-m); background: white; border-top: 1px solid rgba(196,113,74,0.08); }
 
 /* ── Limited Offer ── */

@@ -69,10 +69,21 @@ export default function ProductPage({ params }) {
             </p>
             <div className={styles.finalActions}>
               <div className={styles.finalPrice}>₦{product.price.toLocaleString()}</div>
-              <OrderTrigger product={product} label="💬 Order Now — Pay on Delivery" />
+              <OrderTrigger
+  product={product}
+  label={
+    <>
+      <i
+        className="fa-solid fa-cart-shopping"
+        style={{ fontSize: "14px" }}
+      ></i>{" "}
+      Order Now — Pay on Delivery
+    </>
+  }
+/>
             </div>
             <div className={styles.finalTrust}>
-              {["✅ Pay on Delivery","🚚 Lagos Delivery","↩️ 14-Day Returns","💯 Genuine Product"].map(t=>(
+              {["✅ Pay on Delivery","🚚 Nationwide Delivery","↩️ 5-Days Returns","💯 Genuine Product"].map(t=>(
                 <span key={t} className={styles.pill}>{t}</span>
               ))}
             </div>

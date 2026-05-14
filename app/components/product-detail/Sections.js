@@ -1,4 +1,3 @@
-"use client";
 // Stats.js
 import styles from "./Sections.module.css";
 
@@ -120,8 +119,12 @@ export function ProductImages({ product }) {
         <div className={styles.imgGrid}>
           {product.images.map((img, i) => (
             <div key={i} className={`${styles.imgCard} ${i === 0 ? styles.imgMain : ""}`}>
-              <div className={styles.imgEmoji} style={{ background: img.bg }}>
-                {img.emoji}
+              <div className={styles.imgWrap} style={{ background: product.bg }}>
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className={styles.imgPhoto}
+                />
               </div>
               <div className={styles.imgLabel}>{img.label}</div>
             </div>
@@ -133,54 +136,31 @@ export function ProductImages({ product }) {
 }
 
 // LimitedOffer.js — CTA banner
-export function LimitedOffer({ product }) {
+export function LimitedOffer({ product, onOrder }) {
   const saved = product.originalPrice - product.price;
-
-  const onOrder = () => {
-    // your logic
-  };
-
   return (
     <section className={styles.offer}>
       <div className="container">
         <div className={styles.offerInner}>
-          <div className={styles.offerEmoji}>
-            {product.emoji}
-          </div>
-
+          <div className={styles.offerEmoji}>{product.emoji}</div>
           <div className={styles.offerText}>
-            <div className={styles.offerEyebrow}>
-              🎉 Limited Time Deal
-            </div>
-
+            <div className={styles.offerEyebrow}>🎉 Limited Time Deal</div>
             <h2 className={styles.offerTitle}>
               Get {product.name} for only{" "}
-              <span>
-                ₦{product.price.toLocaleString()}
-              </span>
+              <span>₦{product.price.toLocaleString()}</span>
             </h2>
-
             <p className={styles.offerSub}>
-              Save ₦{saved.toLocaleString()} off the original price.
-              Pay cash on delivery — no risk, no upfront payment.
+              Save ₦{saved.toLocaleString()} off the original price. Pay cash on delivery — no risk, no upfront payment.
             </p>
           </div>
-
           <div className={styles.offerAction}>
-            <button
-              className="btn-wa"
-              onClick={onOrder}
-            >
-              💬 Order Now — Pay Later
+            <button className="btn-wa" onClick={onOrder}>
+              <i className="fa-solid fa-cart-shopping"></i> Order Now — Pay Later
             </button>
-
-            <p className={styles.offerNote}>
-              ⏰ Offer expires soon
-            </p>
+            <p className={styles.offerNote}>⏰ Offer expires soon</p>
           </div>
         </div>
       </div>
     </section>
   );
 }
-

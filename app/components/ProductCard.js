@@ -1,5 +1,5 @@
-"use client";
 import Link from "next/link";
+import Image from "next/image";
 import { CAT_COLORS } from "@/lib/products";
 import styles from "./ProductCard.module.css";
 
@@ -17,8 +17,15 @@ export default function ProductCard({ product }) {
         {product.cat}
       </div>
 
-      <div className={styles.img} style={{ background: product.bg }}>
-        {product.emoji}
+      {/* Product thumbnail image */}
+      <div className={styles.imgWrap} style={{ background: product.bg }}>
+        <Image
+          src={product.thumbnail}
+          alt={product.name}
+          fill
+          sizes="(max-width: 768px) 50vw, 25vw"
+          className={styles.img}
+        />
       </div>
 
       <div className={styles.body}>

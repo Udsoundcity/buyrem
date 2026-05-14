@@ -42,16 +42,20 @@
   letter-spacing: 0.5px;
 }
 
-.img {
+/* image wrapper — keeps 4:3 ratio */
+.imgWrap {
   width: 100%;
   aspect-ratio: 4 / 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 72px;
-  transition: transform 0.3s;
+  position: relative;
+  overflow: hidden;
 }
-.card:hover .img { transform: scale(1.05); }
+
+/* the actual <img> via Next Image */
+.img {
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.card:hover .img { transform: scale(1.07); }
 
 .body { padding: 18px; }
 

@@ -1,34 +1,71 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { CAT_COLORS } from "@/lib/products";
 import OrderModal from "./OrderModal";
 import styles from "./ProductHero.module.css";
 
 export default function ProductHero({ product }) {
-  const [modal, setModal] = useState(false);
-  const cc = CAT_COLORS[product.cat];
-  const saved = product.originalPrice - product.price;
-  const savedPct = Math.round((saved / product.originalPrice) * 100);
+  const [modal,       setModal]       = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const cc          = CAT_COLORS[product.cat];
+  const saved       = product.originalPrice - product.price;
+  const savedPct    = Math.round((saved / product.originalPrice) * 100);
+  const activeImage = product.images[activeIndex];
+
+  const handleThumb = (i) => setActiveIndex(i);
 
   return (
     <>
       <section className={styles.hero}>
         <div className={`container ${styles.inner}`}>
-          {/* Image side */}
+
+          {/* ── IMAGE SIDE ── */}
           <div className={styles.imgSide}>
-            <div className={styles.imgMain} style={{ background: product.bg }}>
-              {product.emoji}
+
+            {/* Main display box */}
+            <div
+              className={styles.imgMain}
+              style={{ background: product.bg }}
+            >
+              <Image
+                key={activeIndex}              // remounts image on switch → triggers fade-in
+                src={activeImage.src}
+                alt={activeImage.alt}
+                fill
+                sizes="(max-width: 900px) 90vw, 45vw"
+                className={styles.mainImg}
+                priority={activeIndex === 0}   // preload the first image
+              />
             </div>
+
+            {/* Thumbnail strip */}
             <div className={styles.thumbRow}>
-              {product.images.slice(0, 4).map((img, i) => (
-                <div key={i} className={styles.thumb} style={{ background: img.bg }}>
-                  {img.emoji}
-                </div>
+              {product.images.map((img, i) => (
+                <button
+                  key={i}
+                  className={`${styles.thumb} ${activeIndex === i ? styles.thumbActive : ""}`}
+                  onClick={() => handleThumb(i)}
+                  title={img.label}
+                  aria-label={`View ${img.label}`}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    sizes="80px"
+                    className={styles.thumbImg}
+                  />
+                </button>
               ))}
             </div>
+
+            {/* Active image label */}
+            <p className={styles.imgLabel}>📸 {activeImage.label}</p>
           </div>
 
-          {/* Info side */}
+          {/* ── INFO SIDE ── */}
           <div className={styles.info}>
             <div className={styles.topRow}>
               <div className={styles.catChip} style={{ background: cc.bg, color: cc.text }}>
@@ -61,13 +98,13 @@ export default function ProductHero({ product }) {
             <p className={styles.desc}>{product.description}</p>
 
             <div className={styles.trustRow}>
-              <div className={styles.trustItem}>✅ Payment on Delivery</div>
-              <div className={styles.trustItem}>🚚 Lagos Delivery</div>
-              <div className={styles.trustItem}>↩️ 5-days returns</div>
+              <span className={styles.trustItem}>✅ Payment on Delivery</span>
+              <span className={styles.trustItem}>🚚 Nationwide Delivery</span>
+              <span className={styles.trustItem}>↩️ 5-days returns</span>
             </div>
 
             <button className={styles.orderBtn} onClick={() => setModal(true)}>
-              💬 Order Now — Pay on Delivery
+              <i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery
             </button>
             <p className={styles.orderNote}>
               Fill a quick form → sent to WhatsApp → pay cash on delivery
@@ -76,15 +113,13 @@ export default function ProductHero({ product }) {
         </div>
       </section>
 
-      {modal && (
-        <OrderModal product={product} onClose={() => setModal(false)} />
-      )}
+      {modal && <OrderModal product={product} onClose={() => setModal(false)} />}
 
-      {/* Sticky floating WA on mobile */}
+      {/* Sticky bottom bar on mobile */}
       <div className={styles.stickyBar}>
         <div className={styles.stickyPrice}>₦{product.price.toLocaleString()}</div>
         <button className={styles.stickyBtn} onClick={() => setModal(true)}>
-          💬 Order Now
+          <i className="fa-solid fa-cart-shopping"></i> Order Now
         </button>
       </div>
     </>
