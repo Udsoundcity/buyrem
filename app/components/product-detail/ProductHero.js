@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { CAT_COLORS } from "@/lib/products";
+import { CAT_COLORS } from "@/lib/constants";   // ← constants, NOT products
 import OrderModal from "./OrderModal";
 import styles from "./ProductHero.module.css";
 
@@ -14,58 +14,43 @@ export default function ProductHero({ product }) {
   const savedPct    = Math.round((saved / product.originalPrice) * 100);
   const activeImage = product.images[activeIndex];
 
-  const handleThumb = (i) => setActiveIndex(i);
-
   return (
     <>
       <section className={styles.hero}>
         <div className={`container ${styles.inner}`}>
 
-          {/* ── IMAGE SIDE ── */}
+          {/* IMAGE SIDE */}
           <div className={styles.imgSide}>
-
-            {/* Main display box */}
-            <div
-              className={styles.imgMain}
-              style={{ background: product.bg }}
-            >
+            <div className={styles.imgMain} style={{ background: product.bg }}>
               <Image
-                key={activeIndex}              // remounts image on switch → triggers fade-in
+                key={activeIndex}
                 src={activeImage.src}
                 alt={activeImage.alt}
                 fill
                 sizes="(max-width: 900px) 90vw, 45vw"
                 className={styles.mainImg}
-                priority={activeIndex === 0}   // preload the first image
+                priority={activeIndex === 0}
               />
             </div>
 
-            {/* Thumbnail strip */}
             <div className={styles.thumbRow}>
               {product.images.map((img, i) => (
                 <button
                   key={i}
                   className={`${styles.thumb} ${activeIndex === i ? styles.thumbActive : ""}`}
-                  onClick={() => handleThumb(i)}
+                  onClick={() => setActiveIndex(i)}
                   title={img.label}
                   aria-label={`View ${img.label}`}
                 >
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    sizes="80px"
-                    className={styles.thumbImg}
-                  />
+                  <Image src={img.src} alt={img.alt} fill sizes="80px" className={styles.thumbImg} />
                 </button>
               ))}
             </div>
 
-            {/* Active image label */}
             <p className={styles.imgLabel}>📸 {activeImage.label}</p>
           </div>
 
-          {/* ── INFO SIDE ── */}
+          {/* INFO SIDE */}
           <div className={styles.info}>
             <div className={styles.topRow}>
               <div className={styles.catChip} style={{ background: cc.bg, color: cc.text }}>
@@ -100,11 +85,11 @@ export default function ProductHero({ product }) {
             <div className={styles.trustRow}>
               <span className={styles.trustItem}>✅ Payment on Delivery</span>
               <span className={styles.trustItem}>🚚 Nationwide Delivery</span>
-              <span className={styles.trustItem}>↩️ 5-days returns</span>
+              <span className={styles.trustItem}>↩️ 5-day returns</span>
             </div>
 
             <button className={styles.orderBtn} onClick={() => setModal(true)}>
-              <i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery
+            <i class="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery
             </button>
             <p className={styles.orderNote}>
               Fill a quick form → sent to WhatsApp → pay cash on delivery
@@ -115,12 +100,10 @@ export default function ProductHero({ product }) {
 
       {modal && <OrderModal product={product} onClose={() => setModal(false)} />}
 
-      {/* Sticky bottom bar on mobile */}
+      {/* Sticky bar on mobile */}
       <div className={styles.stickyBar}>
         <div className={styles.stickyPrice}>₦{product.price.toLocaleString()}</div>
-        <button className={styles.stickyBtn} onClick={() => setModal(true)}>
-          <i className="fa-solid fa-cart-shopping"></i> Order Now
-        </button>
+        <button className={styles.stickyBtn} onClick={() => setModal(true)}><i class="fa-solid fa-cart-shopping"></i> Order Now</button>
       </div>
     </>
   );

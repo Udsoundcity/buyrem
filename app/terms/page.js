@@ -1,6 +1,6 @@
 
 import styles from "../components/PolicyPage.module.css";
-import { STORE_NAME } from "@/lib/products";
+import { STORE_NAME } from "@/lib/constants";
 
 export const metadata = {
   title: `Terms & Conditions | ${STORE_NAME}`,

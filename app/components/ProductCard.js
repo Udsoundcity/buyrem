@@ -1,6 +1,7 @@
+
 import Link from "next/link";
 import Image from "next/image";
-import { CAT_COLORS } from "@/lib/products";
+import { CAT_COLORS } from "@/lib/constants";
 import styles from "./ProductCard.module.css";
 
 export default function ProductCard({ product }) {

@@ -2,7 +2,9 @@
 import { useState } from "react";
 import OrderModal from "./OrderModal";
 
-export default function OrderTrigger({ product, label = "💬 Order Now — Pay on Delivery" }) {
+export default function OrderTrigger({ product, label = <>
+  <i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery
+</> }) {
   const [open, setOpen] = useState(false);
   return (
     <>

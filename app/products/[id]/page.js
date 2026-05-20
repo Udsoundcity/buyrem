@@ -1,6 +1,6 @@
 
 import { notFound } from "next/navigation";
-import { PRODUCTS, getProduct } from "@/lib/products";
+import { getAllProducts, getProduct } from "@/lib/products";
 import ProductHero from "../../components/product-detail/ProductHero";
 import CountdownTimer from "../../components/product-detail/CountdownTimer";
 import FAQ from "../../components/product-detail/FAQ";
@@ -8,8 +8,12 @@ import { Stats, ProblemSolution, Features, Testimonials, ProductImages, LimitedO
 import OrderTrigger from "../../components/product-detail/OrderTrigger";
 import styles from "./page.module.css";
 
+// Always render fresh — never use a cached product detail page
+export const dynamic = "force-dynamic";
+
+// Still generate routes at build time, but re-render dynamically
 export async function generateStaticParams() {
-  return PRODUCTS.map(p => ({ id: p.id }));
+  return getAllProducts().map(p => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }) {
@@ -22,41 +26,22 @@ export async function generateMetadata({ params }) {
 }
 
 export default function ProductPage({ params }) {
+  // Reads fresh from products.json on every request
   const product = getProduct(params.id);
   if (!product) notFound();
 
   return (
     <div className={styles.page}>
-
-      {/* 1 ── HERO with order button */}
       <ProductHero product={product} />
-
-      {/* 2 ── STATISTICS */}
       <Stats product={product} />
-
-      {/* 3 ── PROBLEM & SOLUTION */}
       <ProblemSolution product={product} />
-
-      {/* 4 ── PRODUCT FEATURES */}
       <Features product={product} />
-
-      {/* 5 ── PRODUCT IMAGES */}
       <ProductImages product={product} />
-
-      {/* 6 ── TESTIMONIALS */}
       <Testimonials product={product} />
-
-      {/* 7 ── COUNTDOWN TIMER */}
       <CountdownTimer product={product} />
-
-      {/* 8 ── LIMITED TIME OFFER */}
-      {/* <LimitedOffer product={product} onOrder={() => {}} /> */}
       <LimitedOffer product={product} />
-
-      {/* 9 ── FAQ */}
       <FAQ faqs={product.faq} />
 
-      {/* 10 ── FINAL CTA */}
       <section className={styles.finalCta}>
         <div className="container">
           <div className={styles.finalInner}>
@@ -69,28 +54,18 @@ export default function ProductPage({ params }) {
             </p>
             <div className={styles.finalActions}>
               <div className={styles.finalPrice}>₦{product.price.toLocaleString()}</div>
-              <OrderTrigger
-  product={product}
-  label={
-    <>
-      <i
-        className="fa-solid fa-cart-shopping"
-        style={{ fontSize: "14px" }}
-      ></i>{" "}
-      Order Now — Pay on Delivery
-    </>
-  }
-/>
+              <OrderTrigger product={product} label={<>
+      <i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery
+    </>} />
             </div>
             <div className={styles.finalTrust}>
-              {["✅ Pay on Delivery","🚚 Nationwide Delivery","↩️ 5-Days Returns","💯 Genuine Product"].map(t=>(
+              {["✅ Pay on Delivery","🚚 Nationwide Delivery","↩️ 5-Day Returns","💯 Genuine Product"].map(t=>(
                 <span key={t} className={styles.pill}>{t}</span>
               ))}
             </div>
           </div>
         </div>
       </section>
-
     </div>
   );
 }

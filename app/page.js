@@ -1,11 +1,16 @@
 
 import Link from "next/link";
-import { PRODUCTS, WHATSAPP_NUMBER } from "@/lib/products";
+import { getAllProducts, WHATSAPP_NUMBER } from "@/lib/products";
 import ProductCard from "./components/ProductCard";
 import styles from "./page.module.css";
 
+// ← Tell Next.js: never cache this page.
+//   Always read fresh data from products.json on every request.
+export const dynamic = "force-dynamic";
+
 export default function HomePage() {
-  const featured = PRODUCTS.slice(0, 4);
+  // Called fresh on every request — always reads current products.json
+  const featured = getAllProducts().slice(0, 4);
 
   return (
     <>
@@ -34,7 +39,7 @@ export default function HomePage() {
               </a>
             </div>
             <div className={styles.trustPills}>
-              {["✅ Pay on Delivery","🚚 All States Delivery","↩️ 5-Days Returns","💯 Genuine Products"].map(t=>(
+              {["✅ Pay on Delivery","🚚 Nationwide Delivery","↩️ 5-Day Returns","💯 Genuine Products"].map(t=>(
                 <span key={t} className={styles.pill}>{t}</span>
               ))}
             </div>
@@ -43,7 +48,7 @@ export default function HomePage() {
             <div className={styles.heroCards}>
               <div className={`${styles.hCard} ${styles.hWide}`}>
                 <span className={styles.hEmoji}>🛍️</span>
-                <span className={styles.hLabel}>3 Categories · 6 Products</span>
+                <span className={styles.hLabel}>3 Categories · {getAllProducts().length} Products</span>
               </div>
               {[{e:"💄",l:"Beauty"},{e:"⚡",l:"Electronics"},{e:"🌿",l:"Health"}].map(c=>(
                 <div key={c.l} className={styles.hCard}>
@@ -58,10 +63,10 @@ export default function HomePage() {
 
       {/* ── MARQUEE STRIP ── */}
       <div className={styles.strip}>
-        🚚 <strong>FREE delivery</strong> NationWide &nbsp;·&nbsp;
+        🚚 <strong>FREE delivery</strong> Nationwide &nbsp;·&nbsp;
         💵 <strong>Pay on Delivery</strong> — no card needed &nbsp;·&nbsp;
-        ⭐ Trusted by 4,000+ customers &nbsp;·&nbsp;
-        ↩️ <strong>5-days returns</strong>
+        ⭐ Trusted by 3,000+ customers &nbsp;·&nbsp;
+        ↩️ <strong>5-day returns</strong>
       </div>
 
       {/* ── FEATURED PRODUCTS ── */}
@@ -73,7 +78,7 @@ export default function HomePage() {
               <h2 className="sec-title">Our Top <em>Picks</em></h2>
               <p className="sec-sub">Click any product to see full details and order via WhatsApp.</p>
             </div>
-            <Link href="/products" className={styles.viewAll}>View All 6 Products →</Link>
+            <Link href="/products" className={styles.viewAll}>View All Products →</Link>
           </div>
           <div className={styles.grid}>
             {featured.map(p => <ProductCard key={p.id} product={p} />)}
@@ -96,9 +101,9 @@ export default function HomePage() {
               {icon:"💵",t:"Pay on Delivery",d:"You only pay when your order arrives. Zero risk, zero upfront payment required."},
               {icon:"💬",t:"WhatsApp Orders",d:"Fill a quick form and your order details go straight to our WhatsApp. Easy!"},
               {icon:"🚚",t:"Nationwide Delivery",d:"We deliver across all Lagos LGAs. Same-day delivery available in some areas."},
-              {icon:"↩️",t:"5-Days Returns",d:"Not happy? WhatsApp us within 14 days of delivery. We'll make it right."},
+              {icon:"↩️",t:"5-Day Returns",d:"Not happy? WhatsApp us within 14 days of delivery. We'll make it right."},
               {icon:"✅",t:"Genuine Products",d:"Every product is vetted for quality. No fakes, no substandard goods — ever."},
-              {icon:"⭐",t:"4,000+ Customers",d:"Thousands of Lagos residents trust us for beauty, electronics, and health needs."},
+              {icon:"⭐",t:"3,000+ Customers",d:"Thousands of Lagos residents trust us for beauty, electronics, and health needs."},
             ].map((w,i)=>(
               <div key={i} className={styles.whyCard}>
                 <div className={styles.whyIcon}>{w.icon}</div>
@@ -128,10 +133,7 @@ export default function HomePage() {
               ].map((s,i)=>(
                 <div key={i} className={styles.step}>
                   <div className={styles.stepNum}>{s.n}</div>
-                  <div>
-                    <div className={styles.stepTitle}>{s.t}</div>
-                    <div className={styles.stepDesc}>{s.d}</div>
-                  </div>
+                  <div><div className={styles.stepTitle}>{s.t}</div><div className={styles.stepDesc}>{s.d}</div></div>
                 </div>
               ))}
             </div>
@@ -150,7 +152,7 @@ export default function HomePage() {
               <div className={styles.contactCards}>
                 {[
                   {icon:"💬",l:"WhatsApp",v:"+234 7067584692",s:"Fastest — usually under 30 mins"},
-                  {icon:"📍",l:"Location",v:"Lagos, Nigeria",s:"Delivering across Nigeria"},
+                  {icon:"📍",l:"Location",v:"Lagos, Nigeria",s:"Delivering across all Lagos LGAs"},
                   {icon:"⏰",l:"Hours",v:"Mon – Sat, 8am – 7pm",s:"We're online and ready to help"},
                   {icon:"🚚",l:"Delivery",v:"1–3 Business Days",s:"Same-day in select areas"},
                 ].map((c,i)=>(
@@ -166,13 +168,13 @@ export default function HomePage() {
               </div>
             </div>
             <div className={styles.ctaBox}>
-              <div className={styles.ctaEmoji}><i class="fa-solid fa-cart-plus"></i></div>
+              <div className={styles.ctaEmoji}><i class="fa-solid fa-cart-shopping"></i></div>
               <h3 className={styles.ctaTitle}>Ready to order?</h3>
               <p className={styles.ctaSub}>Chat with us on WhatsApp. We&apos;ll help you choose the right product and confirm delivery.</p>
               <a className="btn-wa"
                 href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi! I want to place an order.")}`}
                 target="_blank" rel="noreferrer">
-                 <i class="fa-brands fa-whatsapp"></i> Start a Chat
+                <i class="fa-brands fa-whatsapp"></i> Start a Chat
               </a>
               <p className={styles.ctaNote}>⏰ Replies within 30 minutes</p>
             </div>

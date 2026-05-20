@@ -1,7 +1,7 @@
 
 import styles from "../components/PolicyPage.module.css";
-import { STORE_NAME, WHATSAPP_NUMBER } from "@/lib/products";
-
+import { STORE_NAME, } from "@/lib/constants";
+import {WHATSAPP_NUMBER} from "@/lib/constants"
 export const metadata = {
   title: `Return & Refund Policy | ${STORE_NAME}`,
   description: "Return and refund policy for MyShop Lagos. Learn how to return products and get your money back.",

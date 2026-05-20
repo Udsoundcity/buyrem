@@ -1,33 +1,24 @@
 
 import Link from "next/link";
-import { STORE_NAME, STORE_TAGLINE, STORE_LOCATION, WHATSAPP_NUMBER } from "../../lib/products";
+import { STORE_NAME, STORE_TAGLINE, STORE_LOCATION, WHATSAPP_NUMBER } from "@/lib/constants";
 import styles from "./Footer.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faXTwitter,
-  faWhatsapp,
-  faFacebook
-} from "@fortawesome/free-brands-svg-icons";
 
 const SOCIALS = [
-  { label: "WhatsApp", icon: (
-      <FontAwesomeIcon
-        icon={faWhatsapp}
-        style={{ color: "#cee4d6", fontSize: "24px" }}
-      />)
-    , href: `https://wa.me/${WHATSAPP_NUMBER}` },
-    
-  { label: "X", icon: (
-      <FontAwesomeIcon
-        icon={faFacebook}
-        style={{ color: "#cee4d6", fontSize: "14px" }}
-      />), href: "https://facebook.com/Buyrem" },
-  { label: "Facebook",  icon: (
-      <FontAwesomeIcon
-        icon={faXTwitter}
-        style={{ color: "#cee4d6", fontSize: "24px" }}
-      />), href: "https://x.com/Buyrem" },
-   
+{
+  label: "WhatsApp",
+  emoji: <i className="fa-brands fa-whatsapp"></i>,
+  href: `https://wa.me/${WHATSAPP_NUMBER}`
+},
+  {
+  label: "X",
+  emoji: <i className="fa-brands fa-x-twitter"></i>,
+  href: "https://x.com/Buyrem"
+},
+  {
+  label: "Facebook",
+  emoji: <i className="fa-brands fa-facebook-f"></i>,
+  href: "https://facebook.com/Buyrem"
+},
 ];
 
 const LINKS_COL1 = [
@@ -38,7 +29,7 @@ const LINKS_COL1 = [
 
 const LINKS_COL2 = [
   { label: "Terms & Conditions", href: "/terms" },
-  { label: "Privacy Policy",     href: "/policy" },
+  { label: "Privacy Policy ",     href: "/privacy" },
   { label: "Return Policy",      href: "/return" },
 ];
 
@@ -50,7 +41,8 @@ export default function Footer() {
         {/* Brand */}
         <div className={styles.brand}>
           <div className={styles.brandName}>
-           <em>{STORE_NAME.charAt(0)}</em>{STORE_NAME.slice(1)}
+              <em>{STORE_NAME.charAt(0)}</em>
+  {STORE_NAME.slice(1)}
           </div>
           <p className={styles.brandTag}>{STORE_TAGLINE}</p>
           <p className={styles.brandLoc}>📍 {STORE_LOCATION}</p>
@@ -60,7 +52,7 @@ export default function Footer() {
             {SOCIALS.map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
                 className={styles.social} title={s.label}>
-                {s.icon}
+                {s.emoji}
               </a>
             ))}
           </div>
@@ -85,7 +77,7 @@ export default function Footer() {
         {/* Contact */}
         <div className={styles.col}>
           <div className={styles.colTitle}>Contact Us</div>
-          <div className={styles.contactItem}>💬 WhatsApp only</div>
+          <div className={styles.contactItem}><i class="fa-solid fa-envelope"></i> BuyremOrder@gmail.com </div>
           <div className={styles.contactItem}>📍 {STORE_LOCATION}</div>
           <div className={styles.contactItem}>⏰ Mon–Sat, 8am–7pm</div>
           <div className={styles.contactItem}>🚚 1–3 day delivery</div>

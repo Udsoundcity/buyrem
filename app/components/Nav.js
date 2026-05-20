@@ -1,8 +1,9 @@
+
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { STORE_NAME, WHATSAPP_NUMBER } from "../../lib/products";
+import { STORE_NAME, WHATSAPP_NUMBER } from "@/lib/constants";
 import styles from "./Nav.module.css";
 
 const LINKS = [
@@ -29,9 +30,7 @@ export default function Nav() {
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.inner}>
         {/* Logo */}
-        <Link href="/" className={styles.logo}>
-<em>{STORE_NAME[0]}</em>{STORE_NAME.slice(1)}
-        </Link>
+        <Link href="/" className={styles.logo}><em>{STORE_NAME.charAt(0)}</em>{STORE_NAME.slice(1)}</Link>
 
         {/* Desktop links */}
         <nav className={styles.links}>
@@ -52,7 +51,7 @@ export default function Nav() {
           href={`https://wa.me/${WHATSAPP_NUMBER}`}
           target="_blank" rel="noreferrer"
         >
-          <i class="fa-brands fa-whatsapp"></i> WhatsApp Us
+       <i class="fa-brands fa-whatsapp"></i> WhatsApp Us
         </a>
 
         {/* Hamburger */}

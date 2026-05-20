@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { WHATSAPP_NUMBER } from "@/lib/products";
+import { WHATSAPP_NUMBER } from "@/lib/constants";   // ← constants, NOT products
 import styles from "./OrderModal.module.css";
 
 export default function OrderModal({ product, onClose }) {
@@ -57,18 +57,17 @@ Please confirm my order. Thank you! 🙏`;
       <div className={styles.modal}>
         <div className={styles.handle} />
 
-        {/* Header */}
         <div className={styles.header}>
           <div className={styles.productRow}>
             <div className={styles.productEmoji} style={{ background: product.bg }}>
-              {product.emoji}
+              {product.emoji || "🛍️"}
             </div>
             <div>
               <div className={styles.productName}>{product.name}</div>
               <div className={styles.productPrice}>₦{product.price.toLocaleString()}</div>
             </div>
           </div>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">✕</button>
+          <button className={styles.closeBtn} onClick={onClose}>✕</button>
         </div>
 
         {/* Quantity */}
@@ -112,29 +111,27 @@ Please confirm my order. Thank you! 🙏`;
         {/* Notes */}
         <div className={styles.group}>
           <label className={styles.label}>
-            Additional Notes <span className={styles.optional}>(optional)</span>
+            Notes <span className={styles.optional}>(optional)</span>
           </label>
           <textarea
             className={styles.textarea}
             value={form.notes}
             onChange={(e) => set("notes", e.target.value)}
-            placeholder="Any special requests or instructions..."
+            placeholder="Any special requests..."
           />
         </div>
 
-        {/* Total */}
         <div className={styles.totalRow}>
           <span className={styles.totalLabel}>Total (Pay on Delivery)</span>
           <span className={styles.totalAmount}>₦{total}</span>
         </div>
 
-        {/* Submit */}
         <button className={styles.submitBtn} onClick={handleSubmit}>
-          <i class="fa-solid fa-cart-shopping text-sm"></i> Send Order via WhatsApp
+         <i class="fa-solid fa-cart-shopping"></i> Send Order via WhatsApp
         </button>
         <p className={styles.note}>
-          Opens WhatsApp with your order details ready to send.<br />
-          💵 You only pay cash when your order arrives at your door.
+          Opens WhatsApp with your order ready to send.<br />
+          💵 You only pay cash when your order arrives.
         </p>
       </div>
     </div>

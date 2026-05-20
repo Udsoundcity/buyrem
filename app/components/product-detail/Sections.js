@@ -1,5 +1,7 @@
-// Stats.js
+"use client";
+import { useState } from "react";
 import styles from "./Sections.module.css";
+import OrderModal from "./OrderModal";
 
 export function Stats({ product }) {
   return (
@@ -135,32 +137,45 @@ export function ProductImages({ product }) {
   );
 }
 
-// LimitedOffer.js — CTA banner
-export function LimitedOffer({ product, onOrder }) {
+// LimitedOffer.js — manages its own order modal so the button always works
+export function LimitedOffer({ product }) {
+  const [modal, setModal] = useState(false);
   const saved = product.originalPrice - product.price;
   return (
-    <section className={styles.offer}>
-      <div className="container">
-        <div className={styles.offerInner}>
-          <div className={styles.offerEmoji}>{product.emoji}</div>
-          <div className={styles.offerText}>
-            <div className={styles.offerEyebrow}>🎉 Limited Time Deal</div>
-            <h2 className={styles.offerTitle}>
-              Get {product.name} for only{" "}
-              <span>₦{product.price.toLocaleString()}</span>
-            </h2>
-            <p className={styles.offerSub}>
-              Save ₦{saved.toLocaleString()} off the original price. Pay cash on delivery — no risk, no upfront payment.
-            </p>
-          </div>
-          <div className={styles.offerAction}>
-            <button className="btn-wa" onClick={onOrder}>
-              <i className="fa-solid fa-cart-shopping"></i> Order Now — Pay Later
-            </button>
-            <p className={styles.offerNote}>⏰ Offer expires soon</p>
+    <>
+      <section className={styles.offer}>
+        <div className="container">
+          <div className={styles.offerInner}>
+            <div className={styles.offerEmoji}>
+              {/* show thumbnail if available, otherwise fallback emoji */}
+              {product.thumbnail
+                ? <img src={product.thumbnail} alt={product.name} style={{ width:80, height:80, borderRadius:16, objectFit:"cover" }} />
+                : "🛍️"}
+            </div>
+            <div className={styles.offerText}>
+              <div className={styles.offerEyebrow}>🎉 Limited Time Deal</div>
+              <h2 className={styles.offerTitle}>
+                Get {product.name} for only{" "}
+                <span>₦{product.price.toLocaleString()}</span>
+              </h2>
+              <p className={styles.offerSub}>
+                Save ₦{saved.toLocaleString()} off the original price.
+                Pay cash on delivery — no risk, no upfront payment.
+              </p>
+            </div>
+            <div className={styles.offerAction}>
+              <button className="btn-wa" onClick={() => setModal(true)}>
+                <i class="fa-solid fa-cart-shopping"></i> Order Now — Pay Later
+              </button>
+              <p className={styles.offerNote}>⏰ Offer Ends Soon</p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {modal && (
+        <OrderModal product={product} onClose={() => setModal(false)} />
+      )}
+    </>
   );
 }
