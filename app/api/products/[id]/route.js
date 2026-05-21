@@ -1,41 +1,35 @@
-import fs from "fs";
-import path from "path";
+
 import { NextResponse } from "next/server";
+import { getAllProducts, saveAllProducts } from "@/lib/products";
 
-const FILE = path.join(process.cwd(), "data/products.json");
-
-function read() {
-  return JSON.parse(fs.readFileSync(FILE, "utf-8"));
-}
-
-function write(data) {
-  fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
+export async function GET(_, { params }) {
+  const products = await getAllProducts();
+  const product  = products.find(p => p.id === params.id);
+  return product
+    ? NextResponse.json(product)
+    : NextResponse.json({ error: "Not found" }, { status: 404 });
 }
 
 export async function PUT(req, { params }) {
-  const { id } = params;
-  const body = await req.json();
+  const body     = await req.json();
+  const products = await getAllProducts();
+  const idx      = products.findIndex(p => p.id === params.id);
 
-  const store = read();
+  if (idx === -1)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const index = store.products.findIndex((p) => p.id === id);
+  products[idx] = { ...products[idx], ...body, id: params.id };
+  await saveAllProducts(products);
+  return NextResponse.json({ success: true });
+}
 
-  if (index === -1) {
-    return NextResponse.json(
-      { error: "Product not found" },
-      { status: 404 }
-    );
-  }
+export async function DELETE(_, { params }) {
+  const products = await getAllProducts();
+  const idx      = products.findIndex(p => p.id === params.id);
 
-  store.products[index] = {
-    ...store.products[index],
-    ...body,
-  };
+  if (idx === -1)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  write(store);
-
-  return NextResponse.json({
-    success: true,
-    product: store.products[index],
-  });
+  await saveAllProducts(products.filter((_, i) => i !== idx));
+  return NextResponse.json({ success: true });
 }

@@ -1,25 +1,24 @@
-import fs from "fs";
-import path from "path";
 import { NextResponse } from "next/server";
+import { getAllProducts, saveAllProducts } from "@/lib/products";
 
-const FILE = path.join(process.cwd(), "data/products.json");
-
-function read()        { return JSON.parse(fs.readFileSync(FILE, "utf-8")); }
-function write(data)   { fs.writeFileSync(FILE, JSON.stringify(data, null, 2)); }
-function slugify(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""); }
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
 
 export async function GET() {
-  return NextResponse.json(read().products);
+  const products = await getAllProducts();
+  return NextResponse.json(products);
 }
 
 export async function POST(req) {
-  const body  = await req.json();
-  const store = read();
-  const id    = body.id || slugify(body.name);
-  if (store.products.find(p => p.id === id)) {
+  const body     = await req.json();
+  const products = await getAllProducts();
+  const id       = body.id || slugify(body.name);
+
+  if (products.find(p => p.id === id)) {
     return NextResponse.json({ error: "ID already exists" }, { status: 409 });
   }
-  store.products.push({ ...body, id });
-  write(store);
+
+  await saveAllProducts([...products, { ...body, id }]);
   return NextResponse.json({ success: true, id }, { status: 201 });
 }

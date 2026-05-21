@@ -1,4 +1,3 @@
-
 import { notFound } from "next/navigation";
 import { getAllProducts, getProduct } from "@/lib/products";
 import ProductHero from "../../components/product-detail/ProductHero";
@@ -8,16 +7,15 @@ import { Stats, ProblemSolution, Features, Testimonials, ProductImages, LimitedO
 import OrderTrigger from "../../components/product-detail/OrderTrigger";
 import styles from "./page.module.css";
 
-// Always render fresh — never use a cached product detail page
 export const dynamic = "force-dynamic";
 
-// Still generate routes at build time, but re-render dynamically
 export async function generateStaticParams() {
-  return getAllProducts().map(p => ({ id: p.id }));
+  const products = await getAllProducts();
+  return products.map(p => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }) {
-  const product = getProduct(params.id);
+  const product = await getProduct(params.id);
   if (!product) return { title: "Not Found" };
   return {
     title: `${product.name} — ₦${product.price.toLocaleString()} | MyShop Lagos`,
@@ -25,9 +23,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function ProductPage({ params }) {
-  // Reads fresh from products.json on every request
-  const product = getProduct(params.id);
+export default async function ProductPage({ params }) {
+  const product = await getProduct(params.id);
   if (!product) notFound();
 
   return (
@@ -50,13 +47,16 @@ export default function ProductPage({ params }) {
             </h2>
             <p className={styles.finalSub}>
               Save ₦{(product.originalPrice - product.price).toLocaleString()} today.
-              Fill the quick form and pay cash when it arrives — zero risk.
+              Pay cash when it arrives — zero risk.
             </p>
             <div className={styles.finalActions}>
               <div className={styles.finalPrice}>₦{product.price.toLocaleString()}</div>
-              <OrderTrigger product={product} label={<>
-      <i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery
-    </>} />
+              <OrderTrigger product={product} label={
+  <>
+    <i className="fa-solid fa-cart-shopping"></i>{" "}
+    Order Now — Pay on Delivery
+  </>
+} />
             </div>
             <div className={styles.finalTrust}>
               {["✅ Pay on Delivery","🚚 Nationwide Delivery","↩️ 5-Day Returns","💯 Genuine Product"].map(t=>(
