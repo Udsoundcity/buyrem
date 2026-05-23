@@ -1,19 +1,23 @@
 "use client";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import styles from "./ImageUpload.module.css";
 
-const MAX_SIZE    = 5 * 1024 * 1024;
-const ALLOWED     = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-const ACCEPT      = ".jpg,.jpeg,.png,.webp";
+const MAX_SIZE = 5 * 1024 * 1024;   // 5 MB
+const ALLOWED  = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const ACCEPT   = ".jpg,.jpeg,.png,.webp";
 
 export default function ImageUpload({ value = "", onChange, label, hint }) {
   const [uploading, setUploading] = useState(false);
   const [error,     setError]     = useState("");
   const [dragging,  setDragging]  = useState(false);
-  const [urlInput,  setUrlInput]  = useState(value);
+  // urlText is ONLY for the URL text input — preview always uses `value` prop
+  const [urlText,   setUrlText]   = useState(value);
   const inputRef = useRef(null);
 
-  // ── Upload a File object to /api/admin/upload ────────────────
+  // Keep the URL text box in sync when the parent changes `value` externally
+  useEffect(() => { setUrlText(value || ""); }, [value]);
+
+  // ── Upload a file to /api/admin/upload ───────────────────────
   const uploadFile = useCallback(async (file) => {
     setError("");
 
@@ -30,15 +34,14 @@ export default function ImageUpload({ value = "", onChange, label, hint }) {
     try {
       const form = new FormData();
       form.append("file", file);
-
       const res  = await fetch("/api/admin/upload", { method: "POST", body: form });
       const data = await res.json();
 
       if (!res.ok || data.error) {
         setError(data.error || "Upload failed. Please try again.");
       } else {
+        // Tell the parent — the value prop will update and drive the preview
         onChange(data.url);
-        setUrlInput(data.url);
       }
     } catch {
       setError("Upload failed. Check your connection and try again.");
@@ -47,9 +50,7 @@ export default function ImageUpload({ value = "", onChange, label, hint }) {
     }
   }, [onChange]);
 
-  // ── Handlers ─────────────────────────────────────────────────
   const onFileInput  = (e) => { const f = e.target.files?.[0]; if (f) uploadFile(f); };
-
   const onDrop = useCallback((e) => {
     e.preventDefault();
     setDragging(false);
@@ -58,33 +59,27 @@ export default function ImageUpload({ value = "", onChange, label, hint }) {
   }, [uploadFile]);
 
   const onUrlChange = (e) => {
-    setUrlInput(e.target.value);
-    onChange(e.target.value);
+    setUrlText(e.target.value);
+    onChange(e.target.value);   // immediately update parent
     setError("");
   };
 
   const remove = () => {
     onChange("");
-    setUrlInput("");
-    setError("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
-  const current = value || urlInput;
-
+  // ── Render ───────────────────────────────────────────────────
   return (
     <div className={styles.wrap}>
       {label && <p className={styles.fieldLabel}>{label}</p>}
 
-      {/* ── Current image preview ── */}
-      {current && (
+      {/* ── Preview (driven entirely by value prop) ── */}
+      {value ? (
         <div className={styles.preview}>
-          <img
-            src={current}
-            alt="Preview"
-            className={styles.previewImg}
-            onError={(e) => { e.target.style.display = "none"; }}
-          />
+          {/* Plain <img> — no Next.js Image needed in the admin panel */}
+          <img src={value} alt="Preview" className={styles.previewImg} />
+
           <div className={styles.previewActions}>
             <button
               type="button"
@@ -92,17 +87,24 @@ export default function ImageUpload({ value = "", onChange, label, hint }) {
               onClick={() => inputRef.current?.click()}
               disabled={uploading}
             >
-              🔄 Replace
+              🔄 Replace image
             </button>
             <button type="button" className={styles.removeBtn} onClick={remove}>
               ✕ Remove
             </button>
           </div>
-        </div>
-      )}
 
-      {/* ── Drop zone ── */}
-      {!current && (
+          {/* Hidden input for the Replace button */}
+          <input
+            ref={inputRef}
+            type="file"
+            accept={ACCEPT}
+            className={styles.hidden}
+            onChange={onFileInput}
+          />
+        </div>
+      ) : (
+        /* ── Drop zone (shown only when no image) ── */
         <div
           className={`${styles.dropzone} ${dragging ? styles.dragging : ""} ${uploading ? styles.busy : ""}`}
           onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
@@ -112,6 +114,7 @@ export default function ImageUpload({ value = "", onChange, label, hint }) {
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
+          aria-label="Upload image"
         >
           <input
             ref={inputRef}
@@ -124,13 +127,11 @@ export default function ImageUpload({ value = "", onChange, label, hint }) {
           {uploading ? (
             <div className={styles.uploadingState}>
               <div className={styles.spinner} />
-              <span>Uploading image…</span>
+              <span>Uploading…</span>
             </div>
           ) : (
             <div className={styles.idleState}>
-              <div className={styles.dzIcon}>
-                {dragging ? "📂" : "📷"}
-              </div>
+              <div className={styles.dzIcon}>{dragging ? "📂" : "📷"}</div>
               <p className={styles.dzTitle}>
                 {dragging ? "Drop to upload" : "Click or drag & drop"}
               </p>
@@ -140,35 +141,24 @@ export default function ImageUpload({ value = "", onChange, label, hint }) {
         </div>
       )}
 
-      {/* Replace button when image exists but we need the hidden input */}
-      {current && (
-        <input
-          ref={inputRef}
-          type="file"
-          accept={ACCEPT}
-          className={styles.hidden}
-          onChange={onFileInput}
-        />
-      )}
-
-      {/* ── Upload progress bar ── */}
+      {/* ── Upload progress indicator ── */}
       {uploading && (
         <div className={styles.progressWrap}>
           <div className={styles.progressBar} />
         </div>
       )}
 
-      {/* ── Error ── */}
+      {/* ── Error message ── */}
       {error && <p className={styles.error}>⚠️ {error}</p>}
 
-      {/* ── URL fallback ── */}
+      {/* ── URL fallback input ── */}
       <div className={styles.urlRow}>
-        <span className={styles.urlLabel}>Or paste URL:</span>
+        <span className={styles.urlLabel}>Or paste a URL:</span>
         <input
           type="url"
           className={styles.urlInput}
           placeholder="https://example.com/image.jpg"
-          value={urlInput}
+          value={urlText}
           onChange={onUrlChange}
         />
       </div>
