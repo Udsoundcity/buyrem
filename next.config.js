@@ -8,7 +8,8 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "glrupwroyxgrjclonmly.supabase.co",
+        hostname: "glrupwroyxgrjclonmkc.supabase.co",
+        pathname: "/storage/v1/object/public/**",
       },
       // Add your own image host here, e.g.:
       // { protocol: "https", hostname: "res.cloudinary.com" },
