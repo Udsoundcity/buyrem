@@ -31,6 +31,14 @@ const nextConfig = {
         hostname: "glrupwroyxgrjclonmly.supabase.co",
         pathname: "/storage/v1/object/public/product-images/",
       },
+       {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
+       {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+      },
     ],
   },
 };
