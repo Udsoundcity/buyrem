@@ -1,9 +1,13 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { CAT_COLORS } from "@/lib/constants";   // ← constants, NOT products
+import { CAT_COLORS } from "@/lib/constants";
 import OrderModal from "./OrderModal";
 import styles from "./ProductHero.module.css";
+
+function scrollToForm() {
+  document.getElementById("product-form")?.scrollIntoView({ behavior: "smooth" });
+}
 
 export default function ProductHero({ product }) {
   const [modal,       setModal]       = useState(false);
@@ -13,6 +17,18 @@ export default function ProductHero({ product }) {
   const saved       = product.originalPrice - product.price;
   const savedPct    = Math.round((saved / product.originalPrice) * 100);
   const activeImage = product.images[activeIndex];
+
+  const handleOrder = () => {
+    if (product.formLink) {
+      scrollToForm();
+    } else {
+      setModal(true);
+    }
+  };
+
+const orderLabel = product.formLink
+  ? <><i className="fa-solid fa-file-lines"></i> Fill Order Form ↓</>
+  : <><i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery</>;
 
   return (
     <>
@@ -42,7 +58,13 @@ export default function ProductHero({ product }) {
                   title={img.label}
                   aria-label={`View ${img.label}`}
                 >
-                  <Image src={img.src} alt={img.alt} fill sizes="80px" className={styles.thumbImg} />
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    sizes="80px"
+                    className={styles.thumbImg}
+                  />
                 </button>
               ))}
             </div>
@@ -88,11 +110,13 @@ export default function ProductHero({ product }) {
               <span className={styles.trustItem}>↩️ 5-day returns</span>
             </div>
 
-            <button className={styles.orderBtn} onClick={() => setModal(true)}>
-            <i class="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery
+            <button className={styles.orderBtn} onClick={handleOrder}>
+              {orderLabel}
             </button>
             <p className={styles.orderNote}>
-              Fill a quick form → sent to WhatsApp → pay cash on delivery
+              {product.formLink
+                ? "Fill the form below and we'll confirm your order"
+                : "Fill a quick form → sent to WhatsApp → pay cash on delivery"}
             </p>
           </div>
         </div>
@@ -100,10 +124,16 @@ export default function ProductHero({ product }) {
 
       {modal && <OrderModal product={product} onClose={() => setModal(false)} />}
 
-      {/* Sticky bar on mobile */}
+      {/* Sticky mobile bar */}
       <div className={styles.stickyBar}>
         <div className={styles.stickyPrice}>₦{product.price.toLocaleString()}</div>
-        <button className={styles.stickyBtn} onClick={() => setModal(true)}><i class="fa-solid fa-cart-shopping"></i> Order Now</button>
+        <button className={styles.stickyBtn} onClick={handleOrder}>
+        {
+  product.formLink
+    ? <><i className="fa-solid fa-file-lines"></i> Fill Order Form ↓</>
+    : <><i className="fa-solid fa-cart-shopping"></i> Order Now — Pay Later</>
+}
+        </button>
       </div>
     </>
   );

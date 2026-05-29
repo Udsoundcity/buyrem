@@ -3,7 +3,11 @@ import { getAllProducts, getProduct } from "@/lib/products";
 import ProductHero from "../../components/product-detail/ProductHero";
 import CountdownTimer from "../../components/product-detail/CountdownTimer";
 import FAQ from "../../components/product-detail/FAQ";
-import { Stats, ProblemSolution, Features, Testimonials, ProductImages, LimitedOffer } from "../../components/product-detail/Sections";
+import {
+  Stats, ProblemSolution, Features, Testimonials,
+  ReviewScreenshots, ProductImages, VideoSection,
+  LimitedOffer, EmbeddedForm,
+} from "../../components/product-detail/Sections";
 import OrderTrigger from "../../components/product-detail/OrderTrigger";
 import styles from "./page.module.css";
 
@@ -27,6 +31,8 @@ export default async function ProductPage({ params }) {
   const product = await getProduct(params.id);
   if (!product) notFound();
 
+  const saved = product.originalPrice - product.price;
+
   return (
     <div className={styles.page}>
       <ProductHero product={product} />
@@ -35,8 +41,10 @@ export default async function ProductPage({ params }) {
       <Features product={product} />
       <ProductImages product={product} />
       <Testimonials product={product} />
+      <ReviewScreenshots product={product} />
       <CountdownTimer product={product} />
       <LimitedOffer product={product} />
+      <VideoSection product={product} />
       <FAQ faqs={product.faq} />
 
       <section className={styles.finalCta}>
@@ -46,17 +54,16 @@ export default async function ProductPage({ params }) {
               Ready to get your <em>{product.name}?</em>
             </h2>
             <p className={styles.finalSub}>
-              Save ₦{(product.originalPrice - product.price).toLocaleString()} today.
-              Pay cash when it arrives — zero risk.
+              {product.formLink
+                ? "Fill the order form below — pay cash when it arrives. Zero risk."
+                : `Save ₦${saved.toLocaleString()} today. Fill the quick form and pay cash when it arrives.`}
             </p>
             <div className={styles.finalActions}>
               <div className={styles.finalPrice}>₦{product.price.toLocaleString()}</div>
-              <OrderTrigger product={product} label={
-  <>
-    <i className="fa-solid fa-cart-shopping"></i>{" "}
-    Order Now — Pay on Delivery
-  </>
-} />
+              <OrderTrigger
+  product={product}
+  label={<><i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery</>}
+/>
             </div>
             <div className={styles.finalTrust}>
               {["✅ Pay on Delivery","🚚 Nationwide Delivery","↩️ 5-Day Returns","💯 Genuine Product"].map(t=>(
@@ -66,6 +73,8 @@ export default async function ProductPage({ params }) {
           </div>
         </div>
       </section>
+
+      <EmbeddedForm product={product} />
     </div>
   );
 }
