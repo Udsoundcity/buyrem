@@ -11,6 +11,21 @@ function formatSize(bytes) {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+// Converts any YouTube/Vimeo URL or full <iframe> HTML to a clean embed URL
+function getEmbedUrl(input) {
+  if (!input) return null;
+  const srcFromHtml = input.match(/src=["']([^"']+)["']/);
+  const url = srcFromHtml ? srcFromHtml[1].trim() : input.trim();
+  const ytWatch = url.match(/youtube\.com\/watch\?v=([^&\s]+)/);
+  if (ytWatch) return `https://www.youtube.com/embed/${ytWatch[1]}?rel=0`;
+  const ytShort = url.match(/youtu\.be\/([^?\s]+)/);
+  if (ytShort) return `https://www.youtube.com/embed/${ytShort[1]}?rel=0`;
+  if (url.includes("youtube.com/embed/")) return url;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return url;
+}
+
 export default function VideoUpload({ value = "", onChange, hint }) {
   const [uploading, setUploading] = useState(false);
   const [progress,  setProgress]  = useState(0);
@@ -96,10 +111,10 @@ export default function VideoUpload({ value = "", onChange, hint }) {
               className={styles.videoEl}
             />
           ) : (
-            /* YouTube / Vimeo embed */
+            /* YouTube / Vimeo — convert to embed URL first */
             <div className={styles.iframeWrap}>
               <iframe
-                src={value}
+                src={getEmbedUrl(value)}
                 className={styles.iframe}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

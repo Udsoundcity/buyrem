@@ -1,19 +1,67 @@
-
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./Sections.module.css";
 import OrderModal from "./OrderModal";
 
-function getEmbedUrl(url) {
-  if (!url) return null;
+// ─── Video URL normaliser ─────────────────────────────────────────
+// Accepts: watch URL, short URL, full <iframe> HTML, or embed URL
+function getEmbedUrl(input) {
+  if (!input) return null;
+
+  // If user pasted full <iframe …> HTML, pull out the src value
+  const srcFromHtml = input.match(/src=["']([^"']+)["']/);
+  const url = srcFromHtml ? srcFromHtml[1].trim() : input.trim();
+
+  // YouTube watch URL → embed
   const ytWatch = url.match(/youtube\.com\/watch\?v=([^&\s]+)/);
   if (ytWatch) return `https://www.youtube.com/embed/${ytWatch[1]}?rel=0`;
+
+  // YouTube short URL  youtu.be/…
   const ytShort = url.match(/youtu\.be\/([^?\s]+)/);
   if (ytShort) return `https://www.youtube.com/embed/${ytShort[1]}?rel=0`;
+
+  // Already an embed URL
   if (url.includes("youtube.com/embed/")) return url;
+
+  // Vimeo
   const vimeo = url.match(/vimeo\.com\/(\d+)/);
   if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+
+  // Direct video file
   return url;
+}
+
+// ─── Form-type detection ──────────────────────────────────────────
+function detectFormType(code) {
+  if (!code) return null;
+  const hasScript = code.includes("<script");
+  const hasIframe = code.includes("<iframe");
+  if (hasIframe) return "iframe-code";   // iframe ± scripts
+  if (hasScript) return "script-only";   // seamless.js style
+  return "url";                          // plain URL
+}
+
+// Renders arbitrary embed HTML (iframes + scripts) by injecting into DOM
+function ScriptInjector({ code }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !code) return;
+    el.innerHTML = "";
+    const parser = new DOMParser();
+    const doc    = parser.parseFromString(code, "text/html");
+    Array.from(doc.body.childNodes).forEach(node => {
+      if (node.nodeName === "SCRIPT") {
+        const s = document.createElement("script");
+        Array.from(node.attributes).forEach(a => s.setAttribute(a.name, a.value));
+        if (node.textContent) s.textContent = node.textContent;
+        el.appendChild(s);
+      } else if (node.nodeType === 1) {
+        el.appendChild(node.cloneNode(true));
+      }
+    });
+  }, [code]);
+  return <div ref={ref} style={{ width: "100%" }} />;
 }
 
 function isDirectVideo(url) {
@@ -219,7 +267,7 @@ export function LimitedOffer({ product }) {
             </div>
             <div className={styles.offerAction}>
               <button className="btn-wa" onClick={handleOrder}>
-               {product.formLink
+                             {product.formLink
   ? <><i className="fa-solid fa-file-lines"></i> Fill Order Form ↓</>
   : <><i className="fa-solid fa-cart-shopping"></i> Order Now — Pay Later</>
 }
@@ -234,25 +282,38 @@ export function LimitedOffer({ product }) {
   );
 }
 
-/* ── NEW: EmbeddedForm — only shown if product.formLink exists ── */
+/* ── EmbeddedForm — auto-detects URL / iframe code / script embed ── */
 export function EmbeddedForm({ product }) {
-  if (!product.formLink) return null;
+  const formLink = product.formLink;
+  if (!formLink) return null;
+
+  const type = detectFormType(formLink);
+
   return (
     <section className={styles.formSection} id="product-form">
       <div className="container">
         <span className="eyebrow">Place Your Order</span>
         <h2 className="sec-title">Order <em>Form</em></h2>
-        <p className="sec-sub" style={{marginBottom:32}}>
+        <p className="sec-sub" style={{ marginBottom: 32 }}>
           Fill in the form below to place your order. Payment is on delivery — no upfront payment required.
         </p>
+
         <div className={styles.formBox}>
-          <iframe
-            src={product.formLink}
-            className={styles.formFrame}
-            title="Order form"
-            loading="lazy"
-          />
+          {type === "url" ? (
+            /* Plain URL — render as iframe */
+            <iframe
+              src={formLink}
+              className={styles.formFrame}
+              allow="payment"
+              title="Order form"
+              loading="lazy"
+            />
+          ) : (
+            /* Embed code (iframe HTML or seamless script) — inject into DOM */
+            <ScriptInjector code={formLink} />
+          )}
         </div>
+
         <p className={styles.formNote}>
           🔒 Your information is safe and only used to process your order.
         </p>

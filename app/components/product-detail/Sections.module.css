@@ -107,15 +107,18 @@
 .formSection { padding: 80px 0; background: var(--cream); }
 .formBox {
   border-radius: 10px;
-  overflow: hidden;
+  /* No overflow:hidden — let the form grow to its natural height */
   border: 1px solid rgba(196,113,74,0.15);
   box-shadow: 0 4px 24px rgba(196,113,74,0.08);
+  background: #fff;
 }
 .formFrame {
   width: 100%;
-  min-height: 620px;
+  min-height: 700px;   /* tall enough for most forms without inner scroll */
+  height: auto;
   border: none;
   display: block;
+  /* Let the iframe expand — Cognito / Typeform resize via postMessage */
 }
 .formNote {
   text-align: center;
@@ -123,6 +126,7 @@
   color: var(--text-f);
   margin-top: 16px;
 }
+
 
 
 /* ── Responsive ── */

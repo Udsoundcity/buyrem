@@ -36,13 +36,20 @@ function Field({label,required,hint,children}){
   );
 }
 
-function getVideoEmbedUrl(url){
-  if(!url)return null;
+function getVideoEmbedUrl(input){
+  if(!input)return null;
+  // If user pasted full <iframe ...> HTML, extract the src
+  const srcFromHtml=input.match(/src=["']([^"']+)["']/);
+  const url=srcFromHtml?srcFromHtml[1].trim():input.trim();
+  // YouTube watch URL
   const yt=url.match(/youtube\.com\/watch\?v=([^&\s]+)/);
   if(yt)return`https://www.youtube.com/embed/${yt[1]}?rel=0`;
+  // YouTube short URL
   const ys=url.match(/youtu\.be\/([^?\s]+)/);
   if(ys)return`https://www.youtube.com/embed/${ys[1]}?rel=0`;
+  // Already embed URL
   if(url.includes("youtube.com/embed/"))return url;
+  // Vimeo
   const vm=url.match(/vimeo\.com\/(\d+)/);
   if(vm)return`https://player.vimeo.com/video/${vm[1]}`;
   return url;
