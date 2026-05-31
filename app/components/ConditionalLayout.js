@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function ConditionalLayout({ children }) {
   const pathname  = usePathname();
