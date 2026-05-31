@@ -1,7 +1,7 @@
 import "./globals.css";
 import ConditionalLayout from "./components/ConditionalLayout";
 import { STORE_NAME, STORE_TAGLINE } from "@/lib/constants";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata = {
   title: `${STORE_NAME} — Beauty, Electronics & Health | Lagos`,
   description: `Shop ${STORE_TAGLINE}. Order via WhatsApp, pay cash on delivery.`,
