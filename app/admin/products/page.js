@@ -109,7 +109,14 @@ export default function AdminProducts() {
                       <td>
                         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                           {p.thumbnail ? (
-                            <img src={p.thumbnail} alt={p.name} className="admin-product-img" />
+                           <img
+  src={p.thumbnail}
+  alt={p.name}
+  className="admin-product-img"
+  width={48}
+  height={48}
+  style={{ flexShrink: 0 }}
+/>
                           ) : (
                             <div className="admin-product-img" style={{ background: p.bg || "#334155", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>🖼️</div>
                           )}
