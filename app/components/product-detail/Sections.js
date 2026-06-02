@@ -321,3 +321,97 @@ export function EmbeddedForm({ product }) {
     </section>
   );
 }
+// ─────────────────────────────────────────────────────────────────
+// TOP STORY — renders just before ProductHero if enabled + has content
+// ─────────────────────────────────────────────────────────────────
+export function TopStory({ product }) {
+  const s = product.topStory;
+  if (!s?.enabled)              return null;
+  if (!s.text && !s.image)      return null;
+
+  return (
+    <section className={styles.topStory}>
+      <div className="container">
+        {s.text && (
+          <p className={styles.topStoryText}>{s.text}</p>
+        )}
+        {s.image && (
+          <div className={styles.topStoryImgWrap}>
+            <img src={s.image} alt="Story" className={styles.topStoryImg} />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CUSTOMER STORY — renders just after VideoSection if enabled
+// ─────────────────────────────────────────────────────────────────
+export function CustomerStory({ product }) {
+  const [modal, setModal] = useState(false);
+  const s = product.customerStory;
+
+  if (!s?.enabled)                                  return null;
+  if (!s.headline && !s.content && !s.image)        return null;
+
+  const handleCta = () => {
+    if (s.ctaType === "form") {
+      scrollToForm();
+    } else {
+      // WhatsApp — open order modal (consistent with rest of the page)
+      setModal(true);
+    }
+  };
+
+  const ctaText  = s.ctaText || "Order Now";
+  const ctaLabel =
+  s.ctaType === "form"
+    ? `📋 ${ctaText}`
+    : `💬 ${ctaText}`;
+
+  const hasImage = Boolean(s.image);
+
+  return (
+    <>
+      <section className={styles.customerStory}>
+        <div className="container">
+          <div
+  className={`${styles.csGrid} ${!hasImage ? styles.csNoImage : ""}`}
+>
+
+            {/* Image */}
+            {hasImage && (
+              <div className={styles.csImgWrap}>
+                <img
+                  src={s.image}
+                  alt={s.headline || "Customer story"}
+                  className={styles.csImg}
+                />
+              </div>
+            )}
+
+            {/* Text + CTA */}
+            <div className={styles.csBody}>
+              {s.headline && (
+                <h2 className={styles.csHeadline}>{s.headline}</h2>
+              )}
+              {s.content && (
+                <p className={styles.csContent}>{s.content}</p>
+              )}
+              {ctaText && (
+                <button className="btn-wa" onClick={handleCta}>
+                  {ctaLabel}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {modal && (
+        <OrderModal product={product} onClose={() => setModal(false)} />
+      )}
+    </>
+  );
+}

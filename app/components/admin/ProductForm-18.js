@@ -44,7 +44,6 @@ function Toggle({label,checked,onChange,hint}){
     </div>
   );
 }
-function Field({ label, required, hint, children }) {
   return(
     <div className="admin-field">
       <label className="admin-label">{label}{required&&<span className="admin-req"> *</span>}</label>
@@ -52,7 +51,7 @@ function Field({ label, required, hint, children }) {
       {hint&&<p className="admin-input-hint">{hint}</p>}
     </div>
   );
-}
+
 function getVideoEmbedUrl(input){
   if(!input)return null;
   // If user pasted full <iframe ...> HTML, extract the src
