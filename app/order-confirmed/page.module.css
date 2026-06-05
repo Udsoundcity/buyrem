@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ── Keyframes ─────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes drawCheck {
+  from { stroke-dashoffset: 80; opacity: 0; }
+  to   { stroke-dashoffset: 0;  opacity: 1; }
+}
+@keyframes ringIn {
+  from { stroke-dashoffset: 170; opacity: 0; }
+  to   { stroke-dashoffset: 0;   opacity: 1; }
+}
+@keyframes pulsate {
+  0%, 100% { transform: scale(1);    opacity: 0.4; }
+  50%       { transform: scale(1.35); opacity: 0; }
+}
+@keyframes blob {
+  0%, 100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 70%; }
+  50%       { border-radius: 40% 60% 30% 70% / 60% 40% 70% 50%; }
+}
+
+/* ── Page wrapper ──────────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  background: #FAF5EE;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px 48px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── Background blobs ── */
+.blob1, .blob2 {
+  position: fixed;
+  border-radius: 60% 40% 70% 30% / 50% 60% 40% 70%;
+  animation: blob 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob1 {
+  width: 520px; height: 520px;
+  top: -200px; right: -160px;
+  background: rgba(196,113,74,0.07);
+  animation-delay: 0s;
+}
+.blob2 {
+  width: 420px; height: 420px;
+  bottom: -180px; left: -140px;
+  background: rgba(196,113,74,0.05);
+  animation-delay: -6s;
+}
+
+/* ── Card ── */
+.card {
+  background: #fff;
+  border-radius: 28px;
+  padding: 52px 48px;
+  max-width: 580px;
+  width: 100%;
+  box-shadow:
+    0 2px 4px rgba(92,61,46,0.04),
+    0 12px 40px rgba(92,61,46,0.08),
+    0 32px 80px rgba(92,61,46,0.06);
+  border: 1px solid rgba(196,113,74,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* ── Logo ── */
+.logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  text-decoration: none;
+  margin-bottom: 36px;
+  display: inline-block;
+  animation: fadeUp 0.45s 0.05s cubic-bezier(0.22,1,0.36,1) both;
+}
+.logoBuy { color: #5C3D2E; }
+.logoRem { color: #C4714A; font-style: italic; }
+
+/* ── Checkmark icon ── */
+.iconWrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 28px;
+  animation: scaleIn 0.6s 0.15s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.circle {
+  width: 96px;
+  height: 96px;
+  color: #C4714A;
+}
+
+.circleRing {
+  stroke-dasharray: 170;
+  stroke-dashoffset: 0;
+  animation: ringIn 0.6s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.checkmark {
+  stroke-dasharray: 80;
+  stroke-dashoffset: 80;
+  animation: drawCheck 0.45s 0.55s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+.pulse {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(196,113,74,0.25);
+  animation: pulsate 2.4s 1s ease-in-out infinite;
+}
+
+/* ── Heading ── */
+.heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 5vw, 36px);
+  color: #5C3D2E;
+  margin: 0 0 8px;
+  line-height: 1.15;
+  animation: fadeUp 0.5s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.sub {
+  font-size: 16px;
+  font-weight: 600;
+  color: #C4714A;
+  margin: 0 0 20px;
+  animation: fadeUp 0.5s 0.35s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* ── Reference badge ── */
+.refBadge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(196,113,74,0.07);
+  border: 1px solid rgba(196,113,74,0.18);
+  border-radius: 100px;
+  padding: 8px 18px;
+  margin-bottom: 20px;
+  animation: fadeUp 0.5s 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.refLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #7A5240;
+}
+.refNum {
+  font-size: 14px;
+  font-weight: 700;
+  color: #C4714A;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Message ── */
+.message {
+  background: rgba(196,113,74,0.05);
+  border-left: 3px solid #C4714A;
+  border-radius: 0 12px 12px 0;
+  padding: 16px 18px;
+  text-align: left;
+  margin-bottom: 28px;
+  animation: fadeUp 0.5s 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.message p {
+  font-size: 14px;
+  color: #7A5240;
+  line-height: 1.7;
+  margin: 0 0 8px;
+}
+.message p:last-child { margin-bottom: 0; }
+
+/* ── Next steps ── */
+.steps {
+  width: 100%;
+  margin-bottom: 32px;
+  animation: fadeUp 0.5s 0.45s cubic-bezier(0.22,1,0.36,1) both;
+}
+.stepsTitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(92,61,46,0.4);
+  margin-bottom: 16px;
+  text-align: left;
+}
+.stepsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+.stepsList::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 28px;
+  bottom: 28px;
+  width: 1px;
+  background: rgba(196,113,74,0.15);
+}
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 10px 0;
+  text-align: left;
+}
+.stepNum {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(196,113,74,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.stepTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #5C3D2E;
+  margin-bottom: 2px;
+}
+.stepDesc {
+  font-size: 13px;
+  color: #7A5240;
+  line-height: 1.5;
+}
+
+/* ── Action buttons ── */
+.actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 20px;
+  animation: fadeUp 0.5s 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+.btnPrimary {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: #C4714A;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.2s;
+}
+.btnPrimary:hover {
+  background: #B05E38;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(196,113,74,0.35);
+}
+.btnWa {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.2s;
+}
+.btnWa:hover {
+  background: #1ebe5d;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37,211,102,0.35);
+}
+
+/* ── Home link ── */
+.homeLink {
+  font-size: 13px;
+  color: rgba(92,61,46,0.45);
+  text-decoration: none;
+  transition: color 0.18s;
+  animation: fadeUp 0.5s 0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+.homeLink:hover { color: #C4714A; }
+
+/* ── Footer ── */
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.5s 0.6s cubic-bezier(0.22,1,0.36,1) both;
+}
+.footer p {
+  font-size: 12px;
+  color: rgba(92,61,46,0.35);
+  margin: 4px 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .card    { padding: 36px 24px; border-radius: 20px; }
+  .actions { flex-direction: column; }
+  .blob1, .blob2 { display: none; }
+}
+
+@media (max-width: 380px) {
+  .card { padding: 28px 18px; }
+}
+
+/* ── Reduced motion ── */
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .page, .page * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
