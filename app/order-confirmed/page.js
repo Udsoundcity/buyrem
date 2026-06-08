@@ -5,14 +5,29 @@ import Link from "next/link";
 import { STORE_NAME, WHATSAPP_NUMBER } from "@/lib/constants";
 import styles from "./page.module.css";
 
+// ─── Guard: Cognito Forms passes merge tags as literal text if the field
+//     name doesn't match exactly (e.g. {entry.name} instead of {entry.Name}).
+//     Any value that still contains { or } was never resolved — treat as null.
+function resolve(value) {
+  if (!value) return null;
+  if (value.includes("{") || value.includes("}")) return null;  // unresolved tag
+  return value.trim() || null;
+}
+
 // ─── Reads optional URL params passed by Cognito Forms redirect ──
-// Set your Cognito Forms redirect URL to:
-//   https://yourdomain.vercel.app/order-confirmed?ref={entry.id}&name={entry.name}
+// Correct Cognito Forms redirect URL format (set in form Settings → Completion):
+//
+//   https://yourdomain.vercel.app/order-confirmed?ref={entry.Id}&name={entry.Name.First}
+//
+// Note: tags are CASE-SENSITIVE. Use Cognito's field picker — don't type them manually.
+// Common mistakes:  {entry.id}   →  should be  {entry.Id}
+//                   {entry.name} →  should be  {entry.Name.First}  or  {entry.Name}
 function ConfirmationContent() {
   const params  = useSearchParams();
-  const ref     = params.get("ref");
-  const name    = params.get("name");
-  const product = params.get("product");
+
+  const ref     = resolve(params.get("ref"));
+  const name    = resolve(params.get("name"));
+  const product = resolve(params.get("product"));
 
   const greeting = name ? `Thank You, ${name.split(" ")[0]}!` : "Thank You!";
 
@@ -60,12 +75,12 @@ function ConfirmationContent() {
         <div className={styles.message}>
           <p>
             {product
-              ? `Your order  for <strong>${product}</strong> has been submitted successfully.`
-              : "Your order  has been submitted successfully."}
+              ? `Your order enquiry for <strong>${product}</strong> has been submitted successfully.`
+              : "Your order enquiry has been submitted successfully."}
             {" "}Our team has received your details and will process your request shortly.
           </p>
           <p>
-            A representative will reach out to you on WhatsApp or by phone call to confirm
+            A representative may reach out to you on WhatsApp or by phone to confirm
             your order and arrange delivery. <strong>No payment is required until your order arrives.</strong>
           </p>
         </div>
@@ -101,6 +116,41 @@ function ConfirmationContent() {
             target="_blank"
             rel="noreferrer"
             className={styles.btnWa}
+          >
+            💬 Chat on WhatsApp
+          </a>
+        </div>
+
+        {/* Back to home */}
+        <Link href="/" className={styles.homeLink}>
+          ← Back to {STORE_NAME}
+        </Link>
+
+      </main>
+
+      {/* ── Footer note ── */}
+      <footer className={styles.footer}>
+        <p>© {new Date().getFullYear()} {STORE_NAME} · Lagos, Nigeria</p>
+        <p>Payment on Delivery · Genuine Products · Fast Lagos Delivery</p>
+      </footer>
+
+    </div>
+  );
+}
+
+// Wrap in Suspense — required by Next.js when useSearchParams is used
+export default function OrderConfirmedPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center",
+        background:"#FAF5EE", fontFamily:"'Plus Jakarta Sans',sans-serif", color:"#7A5240" }}>
+        Loading…
+      </div>
+    }>
+      <ConfirmationContent />
+    </Suspense>
+  );
+}
           >
             <>
   <i className="fa-brands fa-whatsapp"></i> Chat on WhatsApp
