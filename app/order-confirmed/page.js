@@ -61,7 +61,7 @@ function ConfirmationContent() {
 
         {/* Headline */}
         <h1 className={styles.heading}>{greeting}</h1>
-        <p className={styles.sub}>Your submission has been received.</p>
+        <p className={styles.sub}>Your Order has been received.</p>
 
         {/* Optional reference */}
         {ref && (
@@ -75,9 +75,9 @@ function ConfirmationContent() {
         <div className={styles.message}>
           <p>
             {product
-              ? `Your order enquiry for <strong>${product}</strong> has been submitted successfully.`
-              : "Your order enquiry has been submitted successfully."}
-            {" "}Our team has received your details and will process your request shortly.
+              ? `Your order  for <strong>${product}</strong> has been submitted successfully.`
+              : "Your order has been submitted successfully."}
+            {" "}Our team has received your details and will process your Order shortly.
           </p>
           <p>
             A representative may reach out to you on WhatsApp or by phone to confirm
@@ -117,7 +117,7 @@ function ConfirmationContent() {
             rel="noreferrer"
             className={styles.btnWa}
           >
-            💬 Chat on WhatsApp
+            <i class="fab fa-whatsapp"></i> Chat on WhatsApp
           </a>
         </div>
 
@@ -131,7 +131,7 @@ function ConfirmationContent() {
       {/* ── Footer note ── */}
       <footer className={styles.footer}>
         <p>© {new Date().getFullYear()} {STORE_NAME} · Lagos, Nigeria</p>
-        <p>Payment on Delivery · Genuine Products · Fast Lagos Delivery</p>
+        <p>Payment on Delivery · Genuine Products · Fast Nationwide Delivery</p>
       </footer>
 
     </div>
