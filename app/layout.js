@@ -25,6 +25,7 @@ export default function RootLayout({ children }) {
       <body>
         <SpeedInsights/>
         <ConditionalLayout>{children}</ConditionalLayout>
+        <SpeedInsights />
       </body>
     </html>
   );
