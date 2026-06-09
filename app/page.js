@@ -92,7 +92,7 @@ export default async function HomePage() {
               {icon:"💵",t:"Pay on Delivery",d:"You only pay when your order arrives. Zero risk, zero upfront payment."},
               {icon:"💬",t:"WhatsApp Orders",d:"Fill a quick form and your order details go straight to our WhatsApp."},
               {icon:"🚚",t:"Nationwide Delivery",d:"We deliver across all Lagos LGAs. Same-day in some areas."},
-              {icon:"↩️",t:"5-Day Returns",d:"Not happy? WhatsApp us within 14 days. We'll make it right."},
+              {icon:"↩️",t:"5-Day Returns",d:"Not happy? WhatsApp us within 5 days. We'll make it right."},
               {icon:"✅",t:"Genuine Products",d:"Every product is vetted for quality. No fakes, ever."},
               {icon:"⭐",t:"4,000+ Customers",d:"Thousands of Lagos residents trust us for their daily needs."},
             ].map((w,i)=>(
@@ -140,8 +140,8 @@ export default async function HomePage() {
               <p className="sec-sub">Questions? Reach us on WhatsApp — we reply fast.</p>
               <div className={styles.contactCards}>
                 {[
-                  {icon:"💬",l:"WhatsApp",v:"+234 7067584692",s:"Usually under 30 mins"},
-                  {icon:"📍",l:"Location",v:"Lagos, Nigeria",s:"Delivering across all Lagos LGAs"},
+                  {icon:"💬",l:"WhatsApp",v:"+234 8060987399",s:"Usually under 30 mins"},
+                  {icon:"📍",l:"Location",v:"Lagos, Nigeria",s:"Delivering across all States"},
                   {icon:"⏰",l:"Hours",v:"Mon – Sat, 8am – 7pm",s:"We're online and ready"},
                   {icon:"🚚",l:"Delivery",v:"1–3 Business Days",s:"Same-day in select areas"},
                 ].map((c,i)=>(
