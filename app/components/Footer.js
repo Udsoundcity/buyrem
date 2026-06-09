@@ -17,7 +17,7 @@ const SOCIALS = [
   {
   label: "Facebook",
   emoji: <i className="fa-brands fa-facebook-f"></i>,
-  href: "https://facebook.com/Buyrem"
+  href: "https://www.facebook.com/profile.php?id=61590766585244"
 },
 ];
 
