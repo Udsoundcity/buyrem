@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
+import FacebookPixel from "@/app/components/Facebookpixel";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function ConditionalLayout({ children }) {
@@ -17,6 +18,7 @@ export default function ConditionalLayout({ children }) {
 
   return (
     <>
+    <FacebookPixel />
       <Nav />
       <main>{children}</main>
       <Footer />
