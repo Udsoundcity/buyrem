@@ -4,8 +4,11 @@ import { usePathname } from "next/navigation";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
-import FacebookPixel from "@/app/components/Facebookpixel";
+import FacebookPixel from "@/app/components/FacebookPixel";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+
 
 export default function ConditionalLayout({ children }) {
   const pathname  = usePathname();
@@ -18,7 +21,6 @@ export default function ConditionalLayout({ children }) {
 
   return (
     <>
-    <FacebookPixel />
       <Nav />
       <main>{children}</main>
       <Footer />
@@ -29,7 +31,7 @@ export default function ConditionalLayout({ children }) {
         rel="noreferrer"
         title="Chat on WhatsApp"
       >
-        <i class="fa-brands fa-whatsapp"></i>
+        <FontAwesomeIcon icon={faWhatsapp} />
       </a>
     </>
   );

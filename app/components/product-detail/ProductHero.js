@@ -1,138 +1,183 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 import { CAT_COLORS } from "@/lib/constants";
+import CartIcon from "@/app/components/CartIcon";
 import OrderModal from "./OrderModal";
 import styles from "./ProductHero.module.css";
 
 function scrollToForm() {
-  document.getElementById("product-form")?.scrollIntoView({ behavior: "smooth" });
+  document.getElementById("product-form")?.scrollIntoView({ behavior:"smooth" });
 }
 
-export default function ProductHero({ product }) {
-  const [modal,       setModal]       = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+// ── Sticky top bar ────────────────────────────────────────────────
+function StickyBar({ product, onOrder }) {
+  const label = product.formLink ? "Fill Order Form" : "Order Now";
+  return (
+    <div className={styles.stickyBar}>
+      <div className={styles.sbProof}>
+        ⭐ <strong>{product.purchases?.toLocaleString()} sold</strong>
+        &nbsp;·&nbsp;Rated {product.rating}/5
+      </div>
+      <button className={styles.sbCta} onClick={onOrder}>
+        <CartIcon size={12} /> {label}
+      </button>
+    </div>
+  );
+}
 
-  const cc          = CAT_COLORS[product.cat];
-  const saved       = product.originalPrice - product.price;
-  const savedPct    = Math.round((saved / product.originalPrice) * 100);
-  const activeImage = product.images[activeIndex];
+// ── Auto-sliding image/video carousel ────────────────────────────
+function HeroCarousel({ slides }) {
+  const [active, setActive] = useState(0);
+  const timerRef = useRef(null);
 
-  const handleOrder = () => {
-    if (product.formLink) {
-      scrollToForm();
-    } else {
-      setModal(true);
+  const go = (i) => {
+    setActive(i);
+    clearInterval(timerRef.current);
+    if (slides.length > 1) {
+      timerRef.current = setInterval(() => setActive(p => (p + 1) % slides.length), 3500);
     }
   };
 
-const orderLabel = product.formLink
-  ? <><i className="fa-solid fa-file-lines"></i> Fill Order Form ↓</>
-  : <><i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery</>;
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    timerRef.current = setInterval(() => setActive(p => (p + 1) % slides.length), 3500);
+    return () => clearInterval(timerRef.current);
+  }, [slides.length]);
+
+  return (
+    <div className={styles.carousel}>
+      <div className={styles.carouselTrack} style={{ transform:`translateX(-${active * 100}%)` }}>
+        {slides.map((s, i) => (
+          <div key={i} className={styles.carouselSlide}>
+            {s.type === "video" ? (
+              <iframe
+                src={s.embedUrl}
+                className={styles.slideVideo}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Product video"
+              />
+            ) : (
+              <img src={s.src} alt={s.alt || "Product"} className={styles.slideImg} />
+            )}
+          </div>
+        ))}
+      </div>
+      {slides.length > 1 && (
+        <div className={styles.dots}>
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              className={`${styles.dot} ${active === i ? styles.dotActive : ""}`}
+              onClick={() => go(i)}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Build slides from product images + optional video ─────────────
+function buildSlides(product) {
+  const slides = [];
+
+  // Product gallery images
+  (product.images || []).forEach(img => {
+    if (img.src) slides.push({ type:"image", src:img.src, alt:img.alt });
+  });
+
+  // Video as last slide (if set)
+  if (product.videoUrl) {
+    const url    = product.videoUrl;
+    const srcM   = url.match(/src=["']([^"']+)["']/);
+    const rawUrl = srcM ? srcM[1].trim() : url.trim();
+    const ytW    = rawUrl.match(/youtube\.com\/watch\?v=([^&\s]+)/);
+    const ytS    = rawUrl.match(/youtu\.be\/([^?\s]+)/);
+    const vm     = rawUrl.match(/vimeo\.com\/(\d+)/);
+    let embedUrl = rawUrl;
+    if      (ytW) embedUrl = `https://www.youtube.com/embed/${ytW[1]}?rel=0&autoplay=0`;
+    else if (ytS) embedUrl = `https://www.youtube.com/embed/${ytS[1]}?rel=0&autoplay=0`;
+    else if (vm)  embedUrl = `https://player.vimeo.com/video/${vm[1]}`;
+    if (/\.(mp4|webm)(\?|$)/i.test(rawUrl)) {
+      // Direct video — skip as carousel slide (shown in VideoSection instead)
+    } else {
+      slides.push({ type:"video", embedUrl, alt:"Product video" });
+    }
+  }
+
+  return slides;
+}
+
+// ── Main ProductHero (landing page style) ────────────────────────
+export default function ProductHero({ product }) {
+  const [modal, setModal] = useState(false);
+  const saved    = product.originalPrice - product.price;
+  const savedPct = Math.round(saved / product.originalPrice * 100);
+  const slides   = buildSlides(product);
+
+  const handleOrder = () => product.formLink ? scrollToForm() : setModal(true);
+  const orderLabel  = product.formLink ? "Fill Order Form ↓" : "Order Now — Pay on Delivery";
 
   return (
     <>
-      <section className={styles.hero}>
-        <div className={`container ${styles.inner}`}>
+      {/* Sticky top navigation bar */}
+      <StickyBar product={product} onOrder={handleOrder} />
 
-          {/* IMAGE SIDE */}
-          <div className={styles.imgSide}>
-            <div className={styles.imgMain} style={{ background: product.bg }}>
-              <Image
-                key={activeIndex}
-                src={activeImage.src}
-                alt={activeImage.alt}
-                fill
-                sizes="(max-width: 900px) 90vw, 45vw"
-                className={styles.mainImg}
-                priority={activeIndex === 0}
-              />
-            </div>
+      {/* Hero carousel */}
+      <HeroCarousel slides={slides.length ? slides : [{ type:"image", src:product.thumbnail, alt:product.name }]} />
 
-            <div className={styles.thumbRow}>
-              {product.images.map((img, i) => (
-                <button
-                  key={i}
-                  className={`${styles.thumb} ${activeIndex === i ? styles.thumbActive : ""}`}
-                  onClick={() => setActiveIndex(i)}
-                  title={img.label}
-                  aria-label={`View ${img.label}`}
-                >
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    sizes="80px"
-                    className={styles.thumbImg}
-                  />
-                </button>
-              ))}
-            </div>
-
-            <p className={styles.imgLabel}>📸 {activeImage.label}</p>
-          </div>
-
-          {/* INFO SIDE */}
-          <div className={styles.info}>
-            <div className={styles.topRow}>
-              <div className={styles.catChip} style={{ background: cc.bg, color: cc.text }}>
-                {product.cat}
-              </div>
-              {product.badge && (
-                <div className={styles.badge} style={{ background: product.badgeColor }}>
-                  {product.badge}
-                </div>
-              )}
-            </div>
-
-            <h1 className={styles.name}>{product.name}</h1>
-            <p className={styles.tagline}>{product.tagline}</p>
-
-            <div className={styles.ratingRow}>
-              {"⭐".repeat(5)}
-              <span className={styles.ratingNum}>{product.rating}</span>
-              <span className={styles.ratingCount}>({product.reviews} reviews)</span>
-              <span className={styles.ratingDot}>·</span>
-              <span className={styles.purchases}>{product.purchases.toLocaleString()} sold</span>
-            </div>
-
-            <div className={styles.priceRow}>
-              <div className={styles.price}>₦{product.price.toLocaleString()}</div>
-              <div className={styles.original}>₦{product.originalPrice.toLocaleString()}</div>
-              <div className={styles.saveBadge}>Save {savedPct}%</div>
-            </div>
-
-            <p className={styles.desc}>{product.description}</p>
-
-            <div className={styles.trustRow}>
-              <span className={styles.trustItem}>✅ Payment on Delivery</span>
-              <span className={styles.trustItem}>🚚 Nationwide Delivery</span>
-              <span className={styles.trustItem}>↩️ 5-day returns</span>
-            </div>
-
-            <button className={styles.orderBtn} onClick={handleOrder}>
-              {orderLabel}
-            </button>
-            <p className={styles.orderNote}>
-              {product.formLink
-                ? "Fill the form below and we'll confirm your order"
-                : "Fill a quick form → sent to WhatsApp → pay cash on delivery"}
-            </p>
-          </div>
+      {/* Hero body */}
+      <div className={styles.heroBody}>
+        {/* Social proof badge */}
+        <div className={styles.badge}>
+          🔥 {product.purchases?.toLocaleString()} customers already ordered
         </div>
-      </section>
+
+        {/* Headline */}
+        <h1 className={styles.headline}>{product.tagline || product.name}</h1>
+
+        {/* Rating */}
+        <div className={styles.ratingRow}>
+          <span className={styles.stars}>★★★★★</span>
+          <span className={styles.ratingText}>
+            {product.rating} · {product.reviews} verified reviews
+          </span>
+        </div>
+
+        {/* Price */}
+        <div className={styles.priceRow}>
+          <span className={styles.price}>₦{product.price.toLocaleString()}</span>
+          <span className={styles.orig}>₦{product.originalPrice.toLocaleString()}</span>
+          <span className={styles.savePill}>{savedPct}% OFF</span>
+        </div>
+
+        {/* Stock scarcity */}
+        {product.satisfaction && (
+          <div className={styles.stockWarn}>
+            🔥 Only a few left at this price — {product.satisfaction}% satisfaction rate
+          </div>
+        )}
+
+        {/* CTA */}
+        <button className={styles.ctaBtn} onClick={handleOrder}>
+          <CartIcon size={18} /> {orderLabel}
+        </button>
+        <p className={styles.ctaNote}>
+          {product.formLink
+            ? "Fill the form below and pay cash when it arrives"
+            : "No upfront payment · Cash on delivery · 5-day refund"}
+        </p>
+      </div>
 
       {modal && <OrderModal product={product} onClose={() => setModal(false)} />}
 
-      {/* Sticky mobile bar */}
-      <div className={styles.stickyBar}>
-        <div className={styles.stickyPrice}>₦{product.price.toLocaleString()}</div>
-        <button className={styles.stickyBtn} onClick={handleOrder}>
-        {
-  product.formLink
-    ? <><i className="fa-solid fa-file-lines"></i> Fill Order Form ↓</>
-    : <><i className="fa-solid fa-cart-shopping"></i> Order Now — Pay Later</>
-}
+      {/* Mobile sticky bottom bar */}
+      <div className={styles.mobileBar}>
+        <div className={styles.mobilePrice}>₦{product.price.toLocaleString()}</div>
+        <button className={styles.mobileCta} onClick={handleOrder}>
+          <CartIcon size={15} /> {product.formLink ? "Order Form ↓" : "Order Now"}
         </button>
       </div>
     </>

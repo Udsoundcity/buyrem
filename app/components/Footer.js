@@ -2,21 +2,28 @@
 import Link from "next/link";
 import { STORE_NAME, STORE_TAGLINE, STORE_LOCATION, WHATSAPP_NUMBER } from "@/lib/constants";
 import styles from "./Footer.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { FaXTwitter } from "react-icons/fa6";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+
+
 
 const SOCIALS = [
 {
   label: "WhatsApp",
-  emoji: <i className="fa-brands fa-whatsapp"></i>,
+  emoji: <FontAwesomeIcon icon={faWhatsapp} />,
   href: `https://wa.me/${WHATSAPP_NUMBER}`
 },
   {
   label: "X",
-  emoji: <i className="fa-brands fa-x-twitter"></i>,
+  emoji: <FaXTwitter />,
   href: "https://x.com/Buyrem"
 },
   {
   label: "Facebook",
-  emoji: <i className="fa-brands fa-facebook-f"></i>,
+  emoji: <FontAwesomeIcon icon={faFacebook} />,
   href: "https://www.facebook.com/profile.php?id=61590766585244"
 },
 ];
@@ -77,7 +84,9 @@ export default function Footer() {
         {/* Contact */}
         <div className={styles.col}>
           <div className={styles.colTitle}>Contact Us</div>
-          <div className={styles.contactItem}><i class="fa-solid fa-envelope"></i> BuyremOrder@gmail.com </div>
+          <div className={styles.contactItem}><FontAwesomeIcon icon={faEnvelope} /> <a href="mailto:BuyremOrder@gmail.com">
+  BuyremOrder@gmail.com
+</a> </div>
           <div className={styles.contactItem}>📍 {STORE_LOCATION}</div>
           <div className={styles.contactItem}>⏰ Mon–Sat, 8am–7pm</div>
           <div className={styles.contactItem}>🚚 1–3 day delivery</div>

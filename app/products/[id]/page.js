@@ -1,14 +1,17 @@
 import { notFound } from "next/navigation";
 import { getAllProducts, getProduct } from "@/lib/products";
-import ProductHero from "../../components/product-detail/ProductHero";
-import CountdownTimer from "../../components/product-detail/CountdownTimer";
-import FAQ from "../../components/product-detail/FAQ";
+import AnnouncementBar  from "@/app/components/product-detail/AnnouncementBar";
+import ProductHero      from "@/app/components/product-detail/ProductHero";
+import OrderTrigger     from "@/app/components/product-detail/OrderTrigger";
 import {
-  TopStory, Stats, ProblemSolution, Features, Testimonials,
-  ReviewScreenshots, ProductImages, VideoSection,
-  CustomerStory, LimitedOffer, EmbeddedForm,
-} from "../../components/product-detail/Sections";
-import OrderTrigger from "../../components/product-detail/OrderTrigger";
+  TrustStrip, TopStory, Stats,
+  ProblemSection, SolutionSection, ResultsList,
+  BeforeAfterCarousel, HowItWorks,
+  ReviewScreenshots, TestimonialsSection,
+  UrgencySection, VideoSection,
+  CustomerStory, FAQSection,
+  EmbeddedForm, ProductImages,
+} from "@/app/components/product-detail/Sections";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -20,83 +23,53 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const product = await getProduct(params.id);
-  if (!product) return { title: "Not Found" };
- return {
-  title: `${product.name} — ₦${product.price.toLocaleString()} | BuyRem Nigeria`,
-  description: product.description,
-};
+  if (!product) return { title:"Not Found" };
+  return {
+    title:       `${product.name} — ₦${product.price.toLocaleString()} | MyShop Lagos`,
+    description: product.tagline || product.description,
+  };
 }
 
 export default async function ProductPage({ params }) {
   const product = await getProduct(params.id);
   if (!product) notFound();
-
   const saved = product.originalPrice - product.price;
 
   return (
     <div className={styles.page}>
-
-      {/* 1. Top Story — only shown if enabled + has content */}
       <TopStory product={product} />
-
-      {/* 2. Hero */}
+      <AnnouncementBar product={product} />
       <ProductHero product={product} />
-
-      {/* 3. Stats bar */}
+      <TrustStrip />
+      <ProblemSection product={product} />
+      <SolutionSection product={product} />
+      <ResultsList product={product} />
       <Stats product={product} />
-
-      {/* 4. Problem & Solution */}
-      <ProblemSolution product={product} />
-
-      {/* 5. Features */}
-      <Features product={product} />
-
-      {/* 6. Product Image Gallery */}
+      <BeforeAfterCarousel product={product} />
+      <HowItWorks product={product} />
       <ProductImages product={product} />
-
-      {/* 7. Text Testimonials */}
-      <Testimonials product={product} />
-
-      {/* 8. Review Screenshots */}
       <ReviewScreenshots product={product} />
-
-      {/* 9. Countdown Timer */}
-      <CountdownTimer product={product} />
-
-      {/* 10. Limited Time Offer CTA */}
-      <LimitedOffer product={product} />
-
-      {/* 11. Product Illustration Video */}
+      <TestimonialsSection product={product} />
+      <UrgencySection product={product} />
       <VideoSection product={product} />
-
-      {/* 12. Customer Story — only shown if enabled + has content */}
       <CustomerStory product={product} />
+      <FAQSection product={product} />
 
-      {/* 13. FAQ */}
-      <FAQ faqs={product.faq} />
-
-      {/* 14. Final CTA */}
       <section className={styles.finalCta}>
         <div className="container">
           <div className={styles.finalInner}>
-            <h2 className={styles.finalTitle}>
-              Ready to get your <em>{product.name}?</em>
-            </h2>
+            <h2 className={styles.finalTitle}>Ready to get your <em>{product.name}?</em></h2>
             <p className={styles.finalSub}>
-            {product.formLink
-  ? "Fill the order form below — pay cash when it arrives. Zero risk."
-  : `Save ₦${saved.toLocaleString()} today. Fill the quick form and pay cash when it arrives.`
-}
+              {product.formLink
+                ? "Fill the order form below — pay cash when it arrives."
+                : `Save ₦${saved.toLocaleString()} today. Pay cash when it arrives — zero risk.`}
             </p>
             <div className={styles.finalActions}>
               <div className={styles.finalPrice}>₦{product.price.toLocaleString()}</div>
-                          <OrderTrigger
-  product={product}
-  label={<><i className="fa-solid fa-cart-shopping"></i> Order Now — Pay on Delivery</>}
-/>
+              <OrderTrigger product={product} label="Order Now — Pay on Delivery" />
             </div>
             <div className={styles.finalTrust}>
-              {["✅ Pay on Delivery","🚚 Nationwide Delivery","↩️ 5-Day Returns","💯 Genuine Product"].map(t=>(
+              {["✅ Payment on Delivery","🚚 Nationwide Delivery","↩️ 5-Day Returns","💯 Genuine Product"].map(t=>(
                 <span key={t} className={styles.pill}>{t}</span>
               ))}
             </div>
@@ -104,9 +77,7 @@ export default async function ProductPage({ params }) {
         </div>
       </section>
 
-      {/* 15. Embedded Order Form */}
       <EmbeddedForm product={product} />
-
     </div>
   );
 }

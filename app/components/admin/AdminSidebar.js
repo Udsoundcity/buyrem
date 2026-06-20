@@ -3,9 +3,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 const NAV = [
-  { icon: "📦", label: "Products",     href: "/admin/products" },
-  { icon: "➕", label: "Add Product",  href: "/admin/products/new" },
-  { icon: "🏪", label: "View Store",   href: "/" },
+  { icon:"📦", label:"Products",     href:"/admin/products" },
+  { icon:"➕", label:"Add Product",  href:"/admin/products/new" },
+  { icon:"⚙️", label:"Settings",     href:"/admin/settings" },
+  { icon:"🏪", label:"View Store",   href:"/" },
 ];
 
 export default function AdminSidebar() {
@@ -13,8 +14,8 @@ export default function AdminSidebar() {
   const router   = useRouter();
 
   const logout = async () => {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.push("/api/login");
+    await fetch("/api/admin/logout", { method:"POST" });
+    router.push("/admin/login");
   };
 
   return (
@@ -26,11 +27,15 @@ export default function AdminSidebar() {
 
       <nav className="admin-nav">
         <div className="admin-nav-label">Menu</div>
-        {NAV.map((n) => (
+        {NAV.map(n => (
           <Link
             key={n.href}
             href={n.href}
-            className={`admin-nav-link ${pathname === n.href || (n.href !== "/admin/products" && pathname.startsWith(n.href)) ? "active" : ""}`}
+            className={`admin-nav-link ${
+              pathname === n.href ||
+              (n.href !== "/admin/products" && pathname.startsWith(n.href) && n.href !== "/")
+                ? "active" : ""
+            }`}
           >
             <span className="admin-nav-icon">{n.icon}</span>
             {n.label}
