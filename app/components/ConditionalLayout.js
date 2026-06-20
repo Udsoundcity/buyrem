@@ -4,8 +4,6 @@ import { usePathname } from "next/navigation";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
-import FacebookPixel from "@/app/components/FacebookPixel";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
