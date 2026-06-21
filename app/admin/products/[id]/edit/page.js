@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/products";
 import EditClient from "./EditClient";
 
+
+export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }) {
   const p = await getProduct(params.id);
   return { title: p ? `Edit: ${p.name} | Admin` : "Not Found" };

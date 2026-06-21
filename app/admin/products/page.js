@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic"; // this page should always be rendered on the server, not cached
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
