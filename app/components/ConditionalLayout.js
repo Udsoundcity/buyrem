@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
-import FacebookPixel from "./FacebookPixel";
+import FacebookPixel from "@/FacebookPixel";
 
 
 export default function ConditionalLayout({ children }) {
