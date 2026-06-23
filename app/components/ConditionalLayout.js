@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
-
+import FacebookPixel from "./FacebookPixel";
 
 
 export default function ConditionalLayout({ children }) {
@@ -20,10 +20,10 @@ export default function ConditionalLayout({ children }) {
 
   return (
     <>
-    
+    <FacebookPixel />
       <Nav />
       <main>{children}</main>
-      <Footer />
+      <Footer />  <FacebookPixel />
       <a
         className="float-wa"
         href={`https://wa.me/${WHATSAPP_NUMBER}`}
