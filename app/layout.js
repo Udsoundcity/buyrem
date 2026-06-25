@@ -3,6 +3,7 @@ import "./globals.css";
 import ConditionalLayout from "./components/ConditionalLayout";
 import { STORE_NAME, STORE_TAGLINE } from "@/lib/constants";
 import { getSettings } from "@/lib/settings";
+import FacebookPixel from "./components/FacebookPixel";
 
 
 export const metadata = {
@@ -35,35 +36,11 @@ export default async function RootLayout({ children }) {
       </head>
 
       <body>
-        
+        <FacebookPixel />
         <ConditionalLayout>{children}</ConditionalLayout> 
 
         {/* ── Meta Pixel — injected from admin settings ── */}
-        {pixelCode && (
-          <>
-            <Script
-              id="meta-pixel"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: pixelCode
-                  // Strip wrapping <script> tags if admin pasted the full block
-                  .replace(/^\s*<!--[^>]*-->\s*/m, "")
-                  .replace(/<\/?script[^>]*>/gi, "")
-                  .trim(),
-              }}
-            />
-            {/* Noscript fallback — only rendered if pixel ID was detected */}
-            {pixelId && (
-              <noscript>
-                <img
-                  height="1" width="1" style={{ display:"none" }}
-                  src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
-                  alt=""
-                />
-              </noscript>
-            )}
-          </>
-        )}
+        
       </body>
     </html>
   );
