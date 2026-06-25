@@ -41,7 +41,7 @@ export default async function RootLayout({ children }) {
         <ConditionalLayout>{children}</ConditionalLayout> 
 
         {/* ── Meta Pixel — injected from admin settings ── */}
-        <FacebookPixel />
+      
       </body>
     </html>
   );
