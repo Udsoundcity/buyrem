@@ -46,7 +46,7 @@ function ConfirmationContent() {
         </div>
 
         <h1 className={styles.heading}>{greeting}</h1>
-        <p className={styles.sub}>Your Order has been received.</p>
+        <p className={styles.sub}>Your submission has been received.</p>
 
         {ref && (
           <div className={styles.refBadge}>
@@ -57,10 +57,10 @@ function ConfirmationContent() {
 
         <div className={styles.message}>
           <p>
-             {product
-              ? `Your order  for <strong>${product}</strong> has been submitted successfully.`
-              : "Your order has been submitted successfully."}
-            {" "}Our team has received your details and will process your Order shortly.
+            {product
+              ? `Your order enquiry for ${product} has been submitted successfully.`
+              : "Your order enquiry has been submitted successfully."}{" "}
+            Our team has received your details and will process your request shortly.
           </p>
           <p>
             A representative may reach out to you on WhatsApp or by phone to confirm
@@ -98,7 +98,7 @@ function ConfirmationContent() {
             target="_blank" rel="noreferrer"
             className={styles.btnWa}
           >
-         <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+            💬 Chat on WhatsApp
           </a>
         </div>
 
