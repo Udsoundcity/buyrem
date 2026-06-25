@@ -3,7 +3,7 @@ import "./globals.css";
 import ConditionalLayout from "./components/ConditionalLayout";
 import { STORE_NAME, STORE_TAGLINE } from "@/lib/constants";
 import { getSettings } from "@/lib/settings";
-import FacebookPixel from "./components/Facebookpixel";
+
 
 
 
@@ -37,7 +37,7 @@ export default async function RootLayout({ children }) {
       </head>
 
       <body>
-       <FacebookPixel />
+       
         <ConditionalLayout>{children}</ConditionalLayout> 
 
         {/* ── Meta Pixel — injected from admin settings ── */}
