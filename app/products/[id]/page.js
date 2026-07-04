@@ -11,7 +11,7 @@ import {
   ReviewScreenshots, TestimonialsSection,
   UrgencySection, VideoSection,
   CustomerStory, FAQSection,
-  EmbeddedForm, ProductImages,
+  EmbeddedForm, ProductImages,FreeGift
 } from "@/app/components/product-detail/Sections";
 import styles from "./page.module.css";
 
@@ -62,6 +62,8 @@ export default async function ProductPage({ params }) {
       <UrgencySection product={product} />
       <VideoSection product={product} />
       <CustomerStory product={product} />
+      <FreeGift product={product} />
+       <EmbeddedForm product={product} />
       <FAQSection product={product} />
 
       <section className={styles.finalCta}>
@@ -88,7 +90,7 @@ export default async function ProductPage({ params }) {
         </div>
       </section>
 
-      <EmbeddedForm product={product} />
+     
     </div>
   );
 }

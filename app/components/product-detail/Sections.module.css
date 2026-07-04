@@ -199,6 +199,105 @@
 .statNum   { font-family:'DM Serif Display',serif; font-size:clamp(28px,4vw,40px); color:#fff; line-height:1; margin-bottom:6px; }
 .statLabel { font-size:12px; font-weight:600; color:rgba(255,255,255,.72); }
 
+.freeGift {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #FFF8F2 0%, #FAF5EE 100%);
+  border-top: 1px solid rgba(196,113,74,0.1);
+  border-bottom: 1px solid rgba(196,113,74,0.1);
+}
+
+/* Header text */
+.fgHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.fgBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(196,113,74,0.1);
+  border: 1px solid rgba(196,113,74,0.25);
+  color: var(--terra);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.fgTitle {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(24px, 3.5vw, 36px);
+  color: var(--brown);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.fgTitle em { color: var(--terra); font-style: italic; }
+
+.fgSub {
+  font-size: 15px;
+  color: var(--text-m);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* Image wrapper — 15px border radius as required */
+.fgImgWrap {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid rgba(196,113,74,0.15);
+  box-shadow:
+    0 4px 16px rgba(196,113,74,0.1),
+    0 20px 60px rgba(196,113,74,0.08);
+  max-width: 640px;
+  margin: 0 auto 20px;
+  background: #fff;
+}
+
+.fgImg {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  /* Let the image define its own height — no forced aspect ratio */
+}
+
+/* "FREE with every order" overlay tag */
+.fgTag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--terra);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 100px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(196,113,74,0.4);
+}
+
+/* Bottom reassurance note */
+.fgNote {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-m);
+  padding: 12px 20px;
+  background: rgba(42,140,82,0.06);
+  border: 1px solid rgba(42,140,82,0.15);
+  border-radius: 10px;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+
+
 /* ── Responsive ── */
 @media (max-width:900px) {
   .csGrid    { grid-template-columns:1fr; gap:32px; }
@@ -208,4 +307,10 @@
 @media (max-width:580px) {
   .shotGrid  { grid-template-columns:1fr; }
   .statsGrid { grid-template-columns:1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .freeGift   { padding: 44px 0; }
+  .fgImgWrap  { border-radius: 15px; } /* keep 15px on mobile too */
+  .fgTag      { font-size: 10px; padding: 5px 11px; top: 10px; right: 10px; }
+  .fgNote     { font-size: 12px; }
 }

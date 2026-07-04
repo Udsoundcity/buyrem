@@ -9,7 +9,7 @@ const EMPTY = {
   id:"",cat:"Beauty",name:"",tagline:"",price:"",originalPrice:"",
   badge:"",badgeColor:"#D4544A",bg:"#FAF5EE",thumbnail:"",description:"",
   purchases:0,rating:5.0,reviews:0,satisfaction:100,
-  formLink:"",videoUrl:"",reviewScreenshots:[],
+  formLink:"",videoUrl:"",reviewScreenshots:[],freeGiftImage:"",
   announcementBar:{ enabled:false, text:"", bgColor:"#7C3AED", textColor:"#ffffff", showClose:true },
   topStory:       { enabled:false, text:"", image:"" },
   customerStory:  { enabled:false, headline:"", content:"", image:"", ctaType:"whatsapp", ctaText:"Order Now" },
@@ -75,6 +75,7 @@ export default function ProductForm({ initial=null, isEdit=false }) {
     formLink:          initial.formLink          || "",
     videoUrl:          initial.videoUrl          || "",
     reviewScreenshots: initial.reviewScreenshots || [],
+    freeGiftImage:     initial.freeGiftImage     || "",
     announcementBar:   { ...EMPTY.announcementBar,   ...(initial.announcementBar   || {}) },
     topStory:          { ...EMPTY.topStory,          ...(initial.topStory          || {}) },
     customerStory:     { ...EMPTY.customerStory,     ...(initial.customerStory     || {}) },
@@ -284,6 +285,46 @@ export default function ProductForm({ initial=null, isEdit=false }) {
                   <p className="admin-input-hint" style={{marginBottom:14}}>Upload a video or paste a YouTube/Vimeo URL. Shown in its own section below the testimonials.</p>
                   <VideoUpload value={form.videoUrl} onChange={url=>set("videoUrl",url)}
                     hint="MP4, WebM, MOV up to 200MB — or paste a YouTube/Vimeo URL"/>
+                </div>
+
+                {/* Free Gift Image */}
+                <div className="admin-form-card">
+                  <div className="admin-form-card-title">
+                    🎁 Free Gift Image
+                    <span style={{fontSize:12,fontWeight:400,color:"var(--a-muted)",marginLeft:8}}>
+                      — Optional
+                    </span>
+                  </div>
+                  <p className="admin-input-hint" style={{marginBottom:14}}>
+                    Upload an image of the free gift included with this product.
+                    When set, a "Free Gift" section appears on the product page above
+                    the order form. If left empty, the section is completely hidden.
+                  </p>
+                  <ImageUpload
+                    value={form.freeGiftImage || ""}
+                    onChange={url => set("freeGiftImage", url)}
+                    hint="Upload a clear, attractive image of the free gift"
+                  />
+                  {form.freeGiftImage && (
+                    <div style={{
+                      marginTop:10, padding:"10px 14px",
+                      background:"rgba(42,140,82,0.08)",
+                      border:"1px solid rgba(42,140,82,0.2)",
+                      borderRadius:8, fontSize:13, color:"#4ADE80"
+                    }}>
+                      ✓ Free Gift section will appear on this product page.
+                    </div>
+                  )}
+                  {!form.freeGiftImage && (
+                    <div style={{
+                      marginTop:10, padding:"10px 14px",
+                      background:"rgba(251,191,36,0.06)",
+                      border:"1px solid rgba(251,191,36,0.2)",
+                      borderRadius:8, fontSize:12, color:"#FCD34D"
+                    }}>
+                      ⚠️ No image uploaded — Free Gift section will not appear on the product page.
+                    </div>
+                  )}
                 </div>
               </>
             )}

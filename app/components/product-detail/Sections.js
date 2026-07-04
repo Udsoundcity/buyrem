@@ -584,3 +584,39 @@ export function ProductImages({ product }) {
     </section>
   );
 }
+export function FreeGift({ product }) {
+  if (!product.freeGiftImage) return null;
+
+  return (
+    <section className={styles.freeGift}>
+      <div className="container">
+        {/* Header */}
+        <div className={styles.fgHeader}>
+          <div className={styles.fgBadge}>🎁 Special Bonus</div>
+          <h2 className={styles.fgTitle}>
+            You Get a <em>Free Gift</em> With Your Order!
+          </h2>
+          <p className={styles.fgSub}>
+            Every order comes with an exclusive free gift — delivered straight
+            to your door at no extra charge.
+          </p>
+        </div>
+
+        {/* Gift image */}
+        <div className={styles.fgImgWrap}>
+          <img
+            src={product.freeGiftImage}
+            alt="Free gift included with your order"
+            className={styles.fgImg}
+          />
+          <div className={styles.fgTag}>FREE with every order</div>
+        </div>
+
+        {/* Trust note */}
+        <p className={styles.fgNote}>
+          🎀 Gift is automatically included — no code needed. Pay on delivery only.
+        </p>
+      </div>
+    </section>
+  );
+}
