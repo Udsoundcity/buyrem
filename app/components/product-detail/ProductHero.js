@@ -177,7 +177,7 @@ export default function ProductHero({ product }) {
       <div className={styles.mobileBar}>
         <div className={styles.mobilePrice}>₦{product.price.toLocaleString()}</div>
         <button className={styles.mobileCta} onClick={handleOrder}>
-          <CartIcon size={15} /> {product.formLink ? "Order Now - Pay On Delivery" : "Order Now"}
+          <CartIcon size={15} /> {product.formLink ? "Order Now" : "Order Now"}
         </button>
       </div>
     </>
