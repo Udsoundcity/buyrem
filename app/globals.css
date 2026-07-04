@@ -149,11 +149,11 @@ button { cursor: pointer; font-family: inherit; }
 /* ── Float WhatsApp ── */
 .float-wa {
   position: fixed;
-  bottom: 26px;
-  right: 26px;
+  bottom: 90px;
+  right: 5px;
   z-index: 400;
-  width: 58px;
-  height: 58px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #25D366;
   color: #fff;

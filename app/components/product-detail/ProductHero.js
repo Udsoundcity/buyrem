@@ -11,7 +11,7 @@ function scrollToForm() {
 
 // ── Sticky top bar ────────────────────────────────────────────────
 function StickyBar({ product, onOrder }) {
-  const label = product.formLink ? "Fill Order Form" : "Order Now";
+  const label = product.formLink ? "Order Now - Pay On Delivery" : "Order Now";
   return (
     <div className={styles.stickyBar}>
       <div className={styles.sbProof}>
@@ -177,7 +177,7 @@ export default function ProductHero({ product }) {
       <div className={styles.mobileBar}>
         <div className={styles.mobilePrice}>₦{product.price.toLocaleString()}</div>
         <button className={styles.mobileCta} onClick={handleOrder}>
-          <CartIcon size={15} /> {product.formLink ? "Order Form ↓" : "Order Now"}
+          <CartIcon size={15} /> {product.formLink ? "Order Now - Pay On Delivery" : "Order Now"}
         </button>
       </div>
     </>

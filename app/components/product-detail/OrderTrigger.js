@@ -18,7 +18,7 @@ export default function OrderTrigger({ product, label = "Order Now — Pay on De
     }
   };
 
-  const displayLabel = product?.formLink ? "Fill Order Form ↓" : label;
+  const displayLabel = product?.formLink ? "Order Now - Pay On Delivery" : label;
 
   return (
     <>

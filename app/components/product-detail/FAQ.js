@@ -10,7 +10,7 @@ export default function FAQ({ faqs }) {
       <div className="container">
         <span className="eyebrow">FAQ</span>
         <h2 className="sec-title">
-          Common <em>Questions</em>
+          Commonly Asked <em>Questions</em>
         </h2>
         <div className={styles.list}>
           {faqs.map((item, i) => (

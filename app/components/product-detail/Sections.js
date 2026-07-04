@@ -365,7 +365,7 @@ export function UrgencySection({ product }) {
 
           <button className={styles.urgencyCta} onClick={trigger}>
             <CartIcon size={16} color="#D4544A" />
-            {product.formLink ? "Fill Order Form ↓" : "Claim My Discount — Order Now"}
+            {product.formLink ? "Order Now - Pay On Delivery ↓" : "Claim My Discount — Order Now"}
           </button>
           <p className={styles.urgencyNote}>Cash on delivery · No upfront · 5-day refund</p>
         </div>
