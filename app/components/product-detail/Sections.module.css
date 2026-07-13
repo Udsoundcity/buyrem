@@ -197,24 +197,19 @@
 .formBox {
   border-radius: 10px;
   border: 1px solid rgba(196,113,74,0.15);
-  box-shadow: 0 4px 24px rgba(196,113,74,0.08);
   background: #fff;
-  /* No overflow, no fixed height — the form expands to its content */
   overflow: visible;
 }
-
 .formFrame {
   width: 100%;
-  /* Tall default for non-Cognito iframes that can't auto-resize */
-  min-height: 900px;
-  height: auto;
+  min-height: 950px;
   border: none;
   display: block;
 }
 
 .formNote {
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-f);
   margin-top: 16px;
 }
