@@ -267,7 +267,7 @@ export default function AdminOrdersPage() {
     <>
       {/* ── Scoped CSS ─────────────────────────────────────────── */}
       <style>{`
-        .aop-wrap { display:flex; min-height:100vh; background:#0F172A; }
+        .aop-wrap { display:flex; min-height:100vh; background:#0F172A; flex-direction:row; }
         .aop-main { flex:1; display:flex; flex-direction:column; min-width:0; background:#0F172A; }
         .aop-topbar {
           background:#1E293B; border-bottom:1px solid #334155;
@@ -338,7 +338,35 @@ export default function AdminOrdersPage() {
         .aop-cards { display:none; flex-direction:column; gap:12px; }
         .aop-empty { padding:72px 20px; text-align:center; color:#94A3B8; font-size:14px; }
 
+        /* Confirm/delete overlay — self-contained so it works without admin.css */
+        .aop-overlay {
+          position:fixed; inset:0; z-index:9999;
+          background:rgba(0,0,0,0.75);
+          display:flex; align-items:center; justify-content:center; padding:20px;
+        }
+        .aop-confirm {
+          background:#1E293B; border:1px solid #334155; border-radius:18px;
+          padding:32px 28px; max-width:360px; width:100%; text-align:center;
+        }
+        .aop-confirm-icon  { font-size:42px; margin-bottom:14px; }
+        .aop-confirm-title { font-size:17px; font-weight:700; color:#F1F5F9; margin-bottom:8px; }
+        .aop-confirm-sub   { font-size:13px; color:#94A3B8; margin-bottom:24px; line-height:1.6; }
+        .aop-confirm-btns  { display:flex; gap:10px; justify-content:center; }
+        .aop-btn-cancel {
+          padding:10px 22px; border-radius:8px; background:none;
+          border:1px solid #334155; color:#94A3B8; font-size:13px;
+          font-weight:600; cursor:pointer; font-family:inherit;
+        }
+        .aop-btn-del {
+          padding:10px 22px; border-radius:8px;
+          background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3);
+          color:#FCA5A5; font-size:13px; font-weight:700;
+          cursor:pointer; font-family:inherit;
+        }
+
         @media (max-width: 768px) {
+          /* Stack sidebar topbar above content */
+          .aop-wrap   { flex-direction:column; }
           .aop-stats  { grid-template-columns:1fr 1fr; }
           .aop-table-wrap { display:none; }
           .aop-cards  { display:flex; }
@@ -346,7 +374,7 @@ export default function AdminOrdersPage() {
           .aop-content{ padding:14px; }
         }
         @media (max-width: 480px) {
-          .aop-stats  { grid-template-columns:1fr 1fr; gap:8px; }
+          .aop-stats  { gap:8px; }
           .aop-stat   { padding:12px 14px; }
           .aop-stat-num { font-size:20px; }
         }
@@ -500,18 +528,18 @@ export default function AdminOrdersPage() {
       )}
 
       {confirmDel&&(
-        <div className="admin-confirm-overlay">
-          <div className="admin-confirm-box">
-            <div className="admin-confirm-icon">🗑️</div>
-            <div className="admin-confirm-title">
+        <div className="aop-overlay">
+          <div className="aop-confirm">
+            <div className="aop-confirm-icon">🗑️</div>
+            <div className="aop-confirm-title">
               {confirmDel==="bulk"
                 ? `Delete ${selected.size} order${selected.size>1?"s":""}?`
                 : "Delete this order?"}
             </div>
-            <p className="admin-confirm-sub">This cannot be undone.</p>
-            <div className="admin-confirm-btns">
-              <button className="btn-admin-ghost" onClick={()=>setConfirmDel(null)}>Cancel</button>
-              <button className="btn-admin-delete" style={{padding:"10px 24px"}}
+            <p className="aop-confirm-sub">This cannot be undone.</p>
+            <div className="aop-confirm-btns">
+              <button className="aop-btn-cancel" onClick={()=>setConfirmDel(null)}>Cancel</button>
+              <button className="aop-btn-del"
                 onClick={()=>confirmDel==="bulk"?bulkDelete():deleteSingle(confirmDel)}>
                 Yes, Delete
               </button>

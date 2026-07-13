@@ -60,7 +60,7 @@ export default function FormsListClient() {
   return (
     <>
       <style>{`
-        .fml-wrap { display:flex; min-height:100vh; background:#0F172A; }
+        .fml-wrap { display:flex; min-height:100vh; background:#0F172A; flex-direction:row; }
         .fml-main { flex:1; display:flex; flex-direction:column; min-width:0; background:#0F172A; }
         .fml-topbar {
           background:#1E293B; border-bottom:1px solid #334155;
@@ -134,11 +134,39 @@ export default function FormsListClient() {
         .fml-hint { font-size:11px; color:#64748B; line-height:1.6; margin-top:6px; }
         .fml-divider { height:1px; background:#334155; margin:16px 0; }
         .fml-empty { padding:80px 20px; text-align:center; }
-        @media (max-width:600px) {
-          .fml-topbar { padding:12px 14px; }
+
+        /* Self-contained confirm overlay */
+        .fml-overlay {
+          position:fixed; inset:0; z-index:9999;
+          background:rgba(0,0,0,0.75);
+          display:flex; align-items:center; justify-content:center; padding:20px;
+        }
+        .fml-confirm {
+          background:#1E293B; border:1px solid #334155; border-radius:18px;
+          padding:32px 28px; max-width:360px; width:100%; text-align:center;
+        }
+        .fml-confirm-icon  { font-size:42px; margin-bottom:14px; }
+        .fml-confirm-title { font-size:17px; font-weight:700; color:#F1F5F9; margin-bottom:8px; }
+        .fml-confirm-sub   { font-size:13px; color:#94A3B8; margin-bottom:24px; line-height:1.6; }
+        .fml-confirm-btns  { display:flex; gap:10px; justify-content:center; }
+        .fml-btn-cancel {
+          padding:10px 22px; border-radius:8px; background:none;
+          border:1px solid #334155; color:#94A3B8;
+          font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;
+        }
+        .fml-btn-del {
+          padding:10px 22px; border-radius:8px;
+          background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3);
+          color:#FCA5A5; font-size:13px; font-weight:700;
+          cursor:pointer; font-family:inherit;
+        }
+
+        @media (max-width: 768px) {
+          .fml-wrap    { flex-direction:column; }
+          .fml-topbar  { padding:12px 14px; }
           .fml-content { padding:14px; }
-          .fml-card-top { padding:14px 16px; }
-          .fml-share-box { padding:16px; }
+          .fml-card-top{ padding:14px 16px; }
+          .fml-share-box{ padding:16px; }
           .fml-actions { gap:6px; }
         }
       `}</style>
@@ -307,16 +335,16 @@ export default function FormsListClient() {
       </div>
 
       {confirmDel&&(
-        <div className="admin-confirm-overlay">
-          <div className="admin-confirm-box">
-            <div className="admin-confirm-icon">🗑️</div>
-            <div className="admin-confirm-title">Delete &ldquo;{confirmDel.form_name}&rdquo;?</div>
-            <p className="admin-confirm-sub">
+        <div className="fml-overlay">
+          <div className="fml-confirm">
+            <div className="fml-confirm-icon">🗑️</div>
+            <div className="fml-confirm-title">Delete &ldquo;{confirmDel.form_name}&rdquo;?</div>
+            <p className="fml-confirm-sub">
               Settings will be removed. Existing orders are kept. Cannot be undone.
             </p>
-            <div className="admin-confirm-btns">
-              <button className="btn-admin-ghost" onClick={()=>setConfirmDel(null)}>Cancel</button>
-              <button className="btn-admin-delete" style={{padding:"10px 24px"}}
+            <div className="fml-confirm-btns">
+              <button className="fml-btn-cancel" onClick={()=>setConfirmDel(null)}>Cancel</button>
+              <button className="fml-btn-del"
                 onClick={()=>confirmDelete(confirmDel.id)}>Yes, Delete</button>
             </div>
           </div>
