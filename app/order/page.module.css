@@ -1,0 +1,18 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg,#FAF5EE 0%,#F5EDE0 100%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px 16px 48px;
+  font-family: 'Plus Jakarta Sans',sans-serif;
+}
+.inner { width: 100%; max-width: 540px; }
+.trust {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  justify-content: center; margin-bottom: 20px;
+}
+.trustBadge {
+  font-size: 11px; font-weight: 600; color: #7A5240;
+  background: rgba(196,113,74,0.08);
+  border: 1px solid rgba(196,113,74,0.15);
+  padding: 5px 11px; border-radius: 100px;
+}

@@ -10,13 +10,14 @@ import FacebookPixel from "./FacebookPixel";
 
 
 export default function ConditionalLayout({ children }) {
-  const pathname  = usePathname();
-  const isAdmin   = pathname.startsWith("/admin");
+  const pathname = usePathname();
 
-  if (isAdmin) {
-    // Admin pages: render children only — admin has its own.S layout
-    return <>{children}</>;
-  }
+const isAdmin = pathname.startsWith("/admin");
+const isEmbed = pathname.startsWith("/order");
+
+if (isAdmin || isEmbed) {
+  return <>{children}</>;
+}
 
   return (
     <>

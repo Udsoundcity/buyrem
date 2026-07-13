@@ -3,12 +3,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 const NAV = [
-  { icon:"📦", label:"Products",    href:"/admin/products" },
-  { icon:"➕", label:"Add Product", href:"/admin/products/new" },
-  { icon:"📋", label:"Orders",      href:"/admin/orders" },
-  { icon:"📝", label:"Order Forms", href:"/admin/form-settings" },
-  { icon:"⚙️", label:"Settings",    href:"/admin/settings" },
-  { icon:"🏪", label:"View Store",  href:"/" },
+  { icon:"📦", label:"Products",   href:"/admin/products" },
+  { icon:"➕", label:"Add Product",href:"/admin/products/new" },
+  { icon:"📋", label:"Orders",     href:"/admin/orders" },
+  { icon:"📝", label:"Order Form", href:"/admin/form-settings" },
+  { icon:"⚙️", label:"Settings",   href:"/admin/settings" },
+  { icon:"🏪", label:"View Store", href:"/" },
 ];
 
 export default function AdminSidebar() {

@@ -460,12 +460,29 @@ export function TopStory({ product }) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// EMBEDDED FORM
+// EMBEDDED FORM — Replace the existing EmbeddedForm export in Sections.js
+//
+// Key fix: Cognito iframes auto-resize when their iframe.js script is loaded
+// alongside them. For URL-type inputs pointing to cognitoforms.com, we inject
+// the iframe + iframe.js so the form expands to fit its content (no internal
+// scroll, no fixed height required).
+//
+// Replace the entire EmbeddedForm function block with this:
 // ─────────────────────────────────────────────────────────────────
+
 export function EmbeddedForm({ product }) {
   const formLink = product.formLink;
   if (!formLink) return null;
-  const type = detectFormType(formLink);
+
+  const type       = detectFormType(formLink);
+  const isCognito  = formLink.includes("cognitoforms.com");
+
+  // For Cognito URLs, build the auto-resize embed using their iframe.js
+  // (works for both /f/KEY/NUM and /AccountName/FormSlug URL formats)
+  const cognitoIframeCode = isCognito && type === "url"
+    ? `<iframe src="${formLink}" allow="payment" style="border:0;width:100%;"></iframe>\n<script src="https://www.cognitoforms.com/f/iframe.js"></script>`
+    : null;
+
   return (
     <section className={styles.formSection} id="product-form">
       <div className="container">
@@ -474,18 +491,35 @@ export function EmbeddedForm({ product }) {
         <p className={styles.sectionBody} style={{ marginBottom:32 }}>
           Fill in the form below. Payment on delivery — no upfront payment.
         </p>
+
+        {/* No overflow, no fixed height — form expands to full content height */}
         <div className={styles.formBox}>
-          {type === "url" ? (
-            <iframe src={formLink} className={styles.formFrame} allow="payment" title="Order form" loading="lazy" />
+          {cognitoIframeCode ? (
+            // Cognito URL → inject iframe + iframe.js for auto-resize
+            <ScriptInjector code={cognitoIframeCode} />
+          ) : type === "url" ? (
+            // Non-Cognito URL → plain iframe, tall enough for most forms
+            <iframe
+              src={formLink}
+              className={styles.formFrame}
+              allow="payment"
+              title="Order form"
+              loading="lazy"
+            />
           ) : (
+            // Embed code (script or iframe HTML) → inject directly
             <ScriptInjector code={formLink} />
           )}
         </div>
-        <p className={styles.formNote}>🔒 Your information is safe and only used to process your order.</p>
+
+        <p className={styles.formNote}>
+          🔒 Your information is safe and only used to process your order.
+        </p>
       </div>
     </section>
   );
 }
+
 
 // ─────────────────────────────────────────────────────────────────
 // FAQ
