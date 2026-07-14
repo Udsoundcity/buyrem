@@ -164,8 +164,17 @@ button { cursor: pointer; font-family: inherit; }
   text-decoration: none;
   box-shadow: 0 8px 28px rgba(37,211,102,.45);
   animation: bob 3s ease-in-out infinite;
-  transition: transform 0.2s;
+    
 }
+
+
+ body.form-in-view .float-wa,
+   body.form-in-view [data-wa-float] {
+     transform: scale(0);
+     opacity: 0;
+     pointer-events: none;
+     transition: transform 0.3s ease, opacity 0.3s ease;
+   }
 .float-wa:hover { transform: scale(1.12) !important; }
 
 @media (max-width: 900px) {

@@ -127,6 +127,7 @@
   text-decoration: none;
   margin-top: 12px;
   transition: background 0.2s;
+  
 }
 .mobileWa:hover { background: #1ebe5d; }
 

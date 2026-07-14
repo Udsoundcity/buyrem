@@ -3,6 +3,7 @@ import { getAllProducts, getProduct } from "@/lib/products";
 import AnnouncementBar  from "@/app/components/product-detail/AnnouncementBar";
 import ProductHero      from "@/app/components/product-detail/ProductHero";
 import OrderTrigger     from "@/app/components/product-detail/OrderTrigger";
+import FormVisibilityObserver from "@/app/components/product-detail/FormVisibilityObserver";
 import { ViewContentTracker } from "@/app/components/PixelEvents";
 import {
   TrustStrip, TopStory, Stats,
@@ -10,8 +11,8 @@ import {
   BeforeAfterCarousel, HowItWorks,
   ReviewScreenshots, TestimonialsSection,
   UrgencySection, VideoSection,
-  CustomerStory, FAQSection,
-  EmbeddedForm, ProductImages,FreeGift
+  CustomerStory,  FAQSection,
+  EmbeddedForm, ProductImages,FreeGift,
 } from "@/app/components/product-detail/Sections";
 import styles from "./page.module.css";
 
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }) {
   const product = await getProduct(params.id);
   if (!product) return { title: "Not Found" };
   return {
-    title:       `${product.name} — ₦${product.price.toLocaleString()} | MyShop Lagos`,
+    title:       `${product.name} — ₦${product.price.toLocaleString()} | MyShop`,
     description: product.tagline || product.description,
   };
 }
@@ -38,14 +39,8 @@ export default async function ProductPage({ params }) {
 
   return (
     <div className={styles.page}>
-
-      {/*
-        ViewContentTracker fires fbq('track', 'ViewContent', { ... })
-        once per product view — runs client-side after pixel loads.
-        Returns null, no visible output.
-      */}
+      <FormVisibilityObserver />
       <ViewContentTracker product={product} />
-
       <TopStory product={product} />
       <AnnouncementBar product={product} />
       <ProductHero product={product} />
@@ -63,7 +58,7 @@ export default async function ProductPage({ params }) {
       <VideoSection product={product} />
       <CustomerStory product={product} />
       <FreeGift product={product} />
-       <EmbeddedForm product={product} />
+      <EmbeddedForm product={product} />
       <FAQSection product={product} />
 
       <section className={styles.finalCta}>
@@ -74,7 +69,7 @@ export default async function ProductPage({ params }) {
             </h2>
             <p className={styles.finalSub}>
               {product.formLink
-                ? "Fill the order form below — pay cash when it arrives."
+                ? "Fill the order form above — pay cash when it arrives."
                 : `Save ₦${saved.toLocaleString()} today. Pay cash when it arrives — zero risk.`}
             </p>
             <div className={styles.finalActions}>
@@ -89,8 +84,6 @@ export default async function ProductPage({ params }) {
           </div>
         </div>
       </section>
-
-     
     </div>
   );
 }

@@ -136,6 +136,8 @@
   padding: 12px 20px;
   align-items: center; gap: 14px;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+     transition: transform 0.3s ease, opacity 0.3s ease;
+        will-change: transform, opacity;
 }
 .mobilePrice { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--terra); white-space: nowrap; }
 .mobileCta {
@@ -149,6 +151,21 @@
   transition: background .18s;
 }
 .mobileCta:hover { background: #1ebe5d; }
+
+ 
+/* Hide sticky bottom bar when the order form is visible */
+:global(body.form-in-view) .mobileBar {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+}
+ 
+/* Hide the sticky hero bar (social proof bar) when form is visible */
+:global(body.form-in-view) .stickyBar {
+  transform: translateY(-110%);
+  opacity: 0;
+  pointer-events: none;
+}
 
 @media (max-width: 900px) {
   .mobileBar { display: flex; }
