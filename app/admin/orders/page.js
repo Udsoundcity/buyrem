@@ -206,6 +206,11 @@ export default function AdminOrdersPage() {
   const [search,       setSearch]       = useState("");
   const [stateFilter,  setStateFilter]  = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [fromDate,     setFromDate]     = useState("");
+  const [fromTime,     setFromTime]     = useState("");
+  const [toDate,       setToDate]       = useState("");
+  const [toTime,       setToTime]       = useState("");
+  const [showDate,     setShowDate]     = useState(false);
   const [selected,     setSelected]     = useState(new Set());
   const [viewing,      setViewing]      = useState(null);
   const [confirmDel,   setConfirmDel]   = useState(null);
@@ -215,18 +220,30 @@ export default function AdminOrdersPage() {
     setToast({msg,type}); setTimeout(()=>setToast(null),3000);
   };
 
+  // Build an ISO UTC datetime from a local date string + time string
+  const toISO = (date, time, isEnd = false) => {
+    if (!date && !time) return "";
+    const d = date || new Date().toISOString().split("T")[0];
+    const t = time ? `${time}:${isEnd ? "59" : "00"}` : (isEnd ? "23:59:59" : "00:00:00");
+    return new Date(`${d}T${t}`).toISOString();
+  };
+
   const load = useCallback(async () => {
     setLoading(true);
     const p = new URLSearchParams();
-    if (search)       p.set("search",search);
-    if (stateFilter)  p.set("state", stateFilter);
-    if (statusFilter) p.set("status",statusFilter);
+    if (search)       p.set("search", search);
+    if (stateFilter)  p.set("state",  stateFilter);
+    if (statusFilter) p.set("status", statusFilter);
+    const from = toISO(fromDate, fromTime, false);
+    const to   = toISO(toDate,   toTime,   true);
+    if (from) p.set("from", from);
+    if (to)   p.set("to",   to);
     const res  = await fetch(`/api/admin/orders?${p}`);
     const data = await res.json();
     setOrders(Array.isArray(data)?data:[]);
     setSelected(new Set());
     setLoading(false);
-  },[search,stateFilter,statusFilter]);
+  },[search, stateFilter, statusFilter, fromDate, fromTime, toDate, toTime]);
 
   useEffect(()=>{const id=setTimeout(load,search?350:0);return()=>clearTimeout(id);},[load]);
 
@@ -421,7 +438,7 @@ export default function AdminOrdersPage() {
               ))}
             </div>
 
-            {/* Filters */}
+            {/* Filters row 1 */}
             <div className="aop-filters">
               <input className="aop-input" style={{flex:2,minWidth:140}}
                 placeholder="🔍 Name or phone…"
@@ -436,14 +453,107 @@ export default function AdminOrdersPage() {
                 <option value="">All Statuses</option>
                 {STATUSES.map(s=><option key={s} value={s}>{s}</option>)}
               </select>
+              <button onClick={()=>setShowDate(d=>!d)} style={{
+                padding:"10px 14px", whiteSpace:"nowrap", cursor:"pointer",
+                background:showDate?"rgba(99,102,241,0.2)":"#1E293B",
+                border:`1px solid ${showDate?"rgba(99,102,241,0.5)":"#334155"}`,
+                borderRadius:8, color:showDate?"#818CF8":"#94A3B8",
+                fontSize:13, fontFamily:"inherit", transition:"all 0.18s",
+              }}>
+                📅 {showDate?"▲":"▼"}
+              </button>
             </div>
+
+            {/* Filters row 2 — date/time range */}
+            {showDate&&(
+              <div style={{background:"#1E293B",border:"1px solid #334155",
+                borderRadius:12,padding:"16px 18px",marginBottom:16}}>
+                <div style={{fontSize:11,fontWeight:700,color:"#64748B",
+                  textTransform:"uppercase",letterSpacing:"0.5px",marginBottom:12}}>
+                  Date &amp; Time Range
+                </div>
+
+                {/* From */}
+                <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:10,flexWrap:"wrap"}}>
+                  <span style={{fontSize:12,fontWeight:600,color:"#94A3B8",width:32,flexShrink:0}}>From</span>
+                  <input type="date" className="aop-input" style={{flex:1,minWidth:130,colorScheme:"dark"}}
+                    value={fromDate} onChange={e=>setFromDate(e.target.value)}/>
+                  <input type="time" className="aop-input" style={{flex:1,minWidth:110,colorScheme:"dark"}}
+                    value={fromTime} onChange={e=>setFromTime(e.target.value)}/>
+                </div>
+
+                {/* To */}
+                <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:16,flexWrap:"wrap"}}>
+                  <span style={{fontSize:12,fontWeight:600,color:"#94A3B8",width:32,flexShrink:0}}>To</span>
+                  <input type="date" className="aop-input" style={{flex:1,minWidth:130,colorScheme:"dark"}}
+                    value={toDate} onChange={e=>setToDate(e.target.value)}/>
+                  <input type="time" className="aop-input" style={{flex:1,minWidth:110,colorScheme:"dark"}}
+                    value={toTime} onChange={e=>setToTime(e.target.value)}/>
+                </div>
+
+                {/* Quick presets */}
+                <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
+                  {[
+                    {label:"Today", fn:()=>{
+                      const d=new Date().toISOString().split("T")[0];
+                      setFromDate(d);setToDate(d);setFromTime("");setToTime("");
+                    }},
+                    {label:"Yesterday", fn:()=>{
+                      const d=new Date(Date.now()-864e5).toISOString().split("T")[0];
+                      setFromDate(d);setToDate(d);setFromTime("");setToTime("");
+                    }},
+                    {label:"This Week", fn:()=>{
+                      const n=new Date(),m=new Date(n);
+                      m.setDate(n.getDate()-n.getDay()+1);
+                      setFromDate(m.toISOString().split("T")[0]);
+                      setToDate(n.toISOString().split("T")[0]);
+                      setFromTime("");setToTime("");
+                    }},
+                    {label:"This Month", fn:()=>{
+                      const n=new Date();
+                      setFromDate(`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-01`);
+                      setToDate(n.toISOString().split("T")[0]);
+                      setFromTime("");setToTime("");
+                    }},
+                    {label:"Morning 6am–12pm", fn:()=>{setFromTime("06:00");setToTime("12:00");}},
+                    {label:"Afternoon 12–6pm", fn:()=>{setFromTime("12:00");setToTime("18:00");}},
+                    {label:"Evening 6–10pm",   fn:()=>{setFromTime("18:00");setToTime("22:00");}},
+                  ].map(({label,fn})=>(
+                    <button key={label} onClick={fn} style={{
+                      padding:"5px 11px",borderRadius:7,fontSize:11,fontWeight:600,
+                      background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.25)",
+                      color:"#818CF8",cursor:"pointer",fontFamily:"inherit",
+                    }}>{label}</button>
+                  ))}
+                </div>
+
+                {/* Apply / Clear */}
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={load}
+                    className="btn-admin-primary" style={{padding:"9px 20px",fontSize:13}}>
+                    Apply Filter
+                  </button>
+                  <button onClick={()=>{
+                    setFromDate("");setFromTime("");setToDate("");setToTime("");
+                    setTimeout(load,50);
+                  }} style={{
+                    padding:"9px 16px",borderRadius:8,fontSize:13,fontWeight:600,
+                    background:"none",border:"1px solid #334155",color:"#94A3B8",
+                    cursor:"pointer",fontFamily:"inherit",
+                  }}>
+                    Clear Dates
+                  </button>
+                </div>
+              </div>
+            )}
+
 
             {loading ? (
               <div className="aop-empty">Loading orders…</div>
             ) : orders.length===0 ? (
               <div className="aop-empty">
                 <div style={{fontSize:40,marginBottom:12}}>📭</div>
-                {search||stateFilter||statusFilter ? "No orders match your filters." : "No orders yet."}
+                {search||stateFilter||statusFilter||fromDate||toDate||fromTime||toTime ? "No orders match your filters." : "No orders yet."}
               </div>
             ) : (<>
 
