@@ -189,25 +189,12 @@ if (window.self !== window.top) {
 
       <form onSubmit={handleSubmit} noValidate className={styles.form}>
 
-        {/* Tier selector */}
-        <div className={styles.field}>
-          <label className={styles.label}>
-            Select Quantity <span className={styles.req}>*</span>
-          </label>
-          <TierSelector
-            tiers={settings?.tiers}
-            displayStyle={settings?.display_style || "bullet"}
-            value={form.tier_id}
-            onChange={id => update("tier_id", id)}
-            error={errors.tier_id}
-          />
-          {errors.tier_id && <p className={styles.error}>{errors.tier_id}</p>}
-        </div>
+        
 
         {/* Full Name */}
         <div className={styles.field}>
           <label className={styles.label} htmlFor="full_name">
-            Full Name
+             Full Name
             {!fieldConfig.full_name && <span className={styles.optional}> (optional)</span>}
             {fieldConfig.full_name  && <span className={styles.req}> *</span>}
           </label>
@@ -229,7 +216,7 @@ if (window.self !== window.top) {
           </label>
           <input
             id="phone" type="tel" inputMode="tel" autoComplete="tel"
-            placeholder="08012345678"
+            placeholder="E.g 08012345678"
             className={`${styles.input} ${errors.phone ? styles.fieldError : ""}`}
             value={form.phone} onChange={e => update("phone", e.target.value)}
           />
@@ -245,7 +232,7 @@ if (window.self !== window.top) {
           </label>
           <textarea
             id="address" rows={3} autoComplete="street-address"
-            placeholder="House number, street, city / area"
+            placeholder="E.g House number, street, city / area"
             className={`${styles.textarea} ${errors.address ? styles.fieldError : ""}`}
             value={form.address} onChange={e => update("address", e.target.value)}
           />
@@ -272,6 +259,21 @@ if (window.self !== window.top) {
           {errors.state && <p className={styles.error}>{errors.state}</p>}
         </div>
 
+        {/* Tier selector */}
+        <div className={styles.field}>
+          <label className={styles.label}>
+            Select Quantity <span className={styles.req}>*</span>
+          </label>
+          <TierSelector
+            tiers={settings?.tiers}
+            displayStyle={settings?.display_style || "bullet"}
+            value={form.tier_id}
+            onChange={id => update("tier_id", id)}
+            error={errors.tier_id}
+          />
+          {errors.tier_id && <p className={styles.error}>{errors.tier_id}</p>}
+        </div>
+
         {/* Server error */}
         {submitError && (
           <div className={styles.serverError}>⚠️ {submitError}</div>
@@ -280,7 +282,7 @@ if (window.self !== window.top) {
         <button type="submit" className={styles.submit} disabled={submitting}>
           {submitting
             ? <><span className={styles.spinner} /> Placing order…</>
-            : "✅ Place My Order"}
+            : "✅ Submit My Order"}
         </button>
 
   
