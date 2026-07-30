@@ -1,4 +1,4 @@
-import Script from "next/script";
+import FacebookPixel from "./components/FacebookPixel";
 import "./globals.css";
 import ConditionalLayout from "./components/ConditionalLayout";
 import { STORE_NAME, STORE_TAGLINE } from "@/lib/constants";
@@ -38,9 +38,7 @@ export default async function RootLayout({ children }) {
 
       <body>
        
-        <ConditionalLayout>{children}</ConditionalLayout> 
-
-        {/* ── Meta Pixel — injected from admin settings ── */}
+       <FacebookPixel /> <ConditionalLayout>{children}</ConditionalLayout> 
       
       </body>
     </html>

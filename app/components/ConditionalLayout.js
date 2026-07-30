@@ -21,7 +21,7 @@ if (isAdmin || isEmbed) {
 
   return (
     <>
-      <FacebookPixel />
+      
       <Nav />
       <main>{children}</main>
       <Footer />  
