@@ -146,6 +146,11 @@ export default function OrderForm({ settings, slug, variant = "page", redirectTo
       if (error) throw error;
 
       const target = new URL(finalRedirect, window.location.origin);
+      const selectedTier = settings.tiers.find(t => t.id === form.tier_id);
+
+target.searchParams.set("product", settings.product_name || "");
+target.searchParams.set("amount", selectedTier?.price ?? 0);
+target.searchParams.set("tier", selectedTier?.label ?? "");
 target.searchParams.set("ref", orderId);
 target.searchParams.set("name", form.full_name.trim());
 

@@ -17,13 +17,19 @@ function ConfirmationContent() {
   const ref     = resolve(params.get("ref"));
   const name    = resolve(params.get("name"));
   const product = resolve(params.get("product"));
+  const amount = Number(params.get("amount") || 0);
+  const tier = resolve(params.get("tier"));
   const greeting = name ? `Thank You, ${name.split(" ")[0]}!` : "Thank You!";
 
   return (
     <div className={styles.page}>
 
       {/* Fires fbq('track','Lead') once per unique Cognito submission */}
-      <LeadTracker refId={ref} />
+    <LeadTracker
+  refId={ref}
+  product={product}
+  amount={amount}
+/>
 
       <div className={styles.blob1} aria-hidden />
       <div className={styles.blob2} aria-hidden />

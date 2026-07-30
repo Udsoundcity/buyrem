@@ -57,7 +57,7 @@ export function ViewContentTracker({ product }) {
 //    2. Stores the ref in sessionStorage after firing so a browser
 //       refresh — which preserves URL params — does NOT fire again.
 // ─────────────────────────────────────────────────────────────────
-export function LeadTracker({ refId }) {
+export function LeadTracker({ refId, product, amount }) {
   useEffect(() => {
     // Guard: no ref = not a genuine Cognito redirect
     if (!refId) return;
@@ -71,7 +71,11 @@ export function LeadTracker({ refId }) {
     const MAX = 50;
     const attempt = () => {
       if (typeof window !== "undefined" && typeof window.fbq === "function") {
-        window.fbq("track", "Lead");
+       window.fbq("track", "Lead", {
+  content_name: product || "Order",
+  value: amount || 0,
+  currency: "NGN",
+});
         sessionStorage.setItem(storageKey, "1");
       } else if (attempts < MAX) {
         attempts++;
