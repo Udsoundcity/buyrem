@@ -47,7 +47,7 @@ export default async function ProductPage({ params }) {
       <TrustStrip />
       <ProblemSection product={product} />
       <SolutionSection product={product} />
-      <ResultsList product={product} />
+      {/* Removed result list from here */}
       <Stats product={product} />
       <BeforeAfterCarousel product={product} />
       <HowItWorks product={product} />

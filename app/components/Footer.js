@@ -51,7 +51,6 @@ export default function Footer() {
               <em>{STORE_NAME.charAt(0)}</em>
   {STORE_NAME.slice(1)}
           </div>
-          <p className={styles.brandTag}>{STORE_TAGLINE}</p>
           <p className={styles.brandLoc}>📍 {STORE_LOCATION}</p>
 
           {/* Socials */}
@@ -65,13 +64,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Shop links */}
-        <div className={styles.col}>
-          <div className={styles.colTitle}>Quick Links</div>
-          {LINKS_COL1.map((l) => (
-            <Link key={l.href} href={l.href} className={styles.colLink}>{l.label}</Link>
-          ))}
-        </div>
+
 
         {/* Policy links */}
         <div className={styles.col}>
@@ -81,16 +74,6 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Contact */}
-        <div className={styles.col}>
-          <div className={styles.colTitle}>Contact Us</div>
-          <div className={styles.contactItem}><FontAwesomeIcon icon={faEnvelope} /> <a href="mailto:BuyremOrder@gmail.com">
-  BuyremOrder@gmail.com
-</a> </div>
-          <div className={styles.contactItem}>📍 {STORE_LOCATION}</div>
-          <div className={styles.contactItem}>⏰ Mon–Sat, 8am–7pm</div>
-          <div className={styles.contactItem}>🚚 1–3 day delivery</div>
-        </div>
       </div>
 
       {/* Bottom bar */}
@@ -98,9 +81,6 @@ export default function Footer() {
         <div className={`container ${styles.bottomInner}`}>
           <span className={styles.copy}>
             © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
-          </span>
-          <span className={styles.pod}>
-            <span className={styles.podDot} /> Payment on Delivery · No upfront payment required
           </span>
         </div>
       </div>
