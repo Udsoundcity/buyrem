@@ -293,9 +293,9 @@ export function TestimonialsSection({ product }) {
     <>
       <section className={styles.testimonials}>
         <div className="container">
-          <span className={styles.eyebrow}>Real customers</span>
+          <span className={styles.eyebrow}>Real customers Reviews</span>
           <h2 className={styles.sectionTitle}>
-            They didn&apos;t<br /><em>believe it either.</em>
+            They Are<br /><em>Satisfied!</em>
           </h2>
           <div className={styles.testiList}>
             {product.testimonials?.map((t, i) => (
@@ -312,7 +312,7 @@ export function TestimonialsSection({ product }) {
             ))}
           </div>
           <button className={styles.testiCta} onClick={trigger}>
-            <CartIcon size={16} /> Order Now — Same Results Await You
+            <CartIcon size={16} /> Order Now — Pay On Delivery Day
           </button>
         </div>
       </section>
@@ -606,9 +606,9 @@ export function FreeGift({ product }) {
       <div className="container">
         {/* Header */}
         <div className={styles.fgHeader}>
-          <div className={styles.fgBadge}>🎁 Special Bonus</div>
+          <div className={styles.fgBadge}>🎁 SPECIAL OFFER TODAY ONLY!</div>
           <h2 className={styles.fgTitle}>
-            You Get a <em>Free Gift</em> With Your Order!
+            You Will Get a <em>Free Gift</em> Attached To Your Order!
           </h2>
           <p className={styles.fgSub}>
             Every order comes with an exclusive free gift — delivered straight
@@ -625,11 +625,6 @@ export function FreeGift({ product }) {
           />
           <div className={styles.fgTag}>FREE with every order</div>
         </div>
-
-        {/* Trust note */}
-        <p className={styles.fgNote}>
-          🎀 Gift is automatically included — no code needed. Pay on delivery only.
-        </p>
       </div>
     </section>
   );
