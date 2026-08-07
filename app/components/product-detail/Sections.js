@@ -270,8 +270,8 @@ export function ReviewScreenshots({ product }) {
   return (
     <section className={styles.screenshots}>
       <div className="container">
-        <span className={styles.eyebrow}>Customer Proof</span>
-        <h2 className={styles.sectionTitle}>Review <em>Screenshots</em></h2>
+        <span className={styles.eyebrow}>What Our Customers Say</span>
+        <h2 className={styles.sectionTitle}>Real <em>Customers Reviews</em></h2>
         <div className={styles.shotGrid}>
           {shots.map((src, i) => (
             <div key={i} className={styles.shotCard}>
