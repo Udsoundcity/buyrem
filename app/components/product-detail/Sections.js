@@ -445,14 +445,35 @@ export function CustomerStory({ product }) {
 // ─────────────────────────────────────────────────────────────────
 export function TopStory({ product }) {
   const s = product.topStory;
-  if (!s?.enabled || (!s.text && !s.image)) return null;
+  if (!s?.enabled || (!s.text && !s.subtext && !s.image)) return null;
+ 
+  // Only apply inline overrides when the admin has explicitly set a value
+  const sectionStyle = s.bgColor ? { background: s.bgColor } : {};
+  const textStyle    = s.textColor ? { color: s.textColor } : {};
+ 
   return (
-    <section className={styles.topStory}>
-      <div className="container">
-        {s.text  && <p  className={styles.topStoryText}>{s.text}</p>}
+    <section className={styles.topStory} style={sectionStyle}>
+      {/* Full-width inner — no container cap so it reads edge-to-edge */}
+      <div className={styles.topStoryInner}>
+ 
+        {/* Main headline — large, bold, centred */}
+        {s.text && (
+          <h2 className={styles.topStoryHeadline} style={textStyle}>
+            {s.text}
+          </h2>
+        )}
+ 
+        {/* Subtitle / supporting copy */}
+        {s.subtext && (
+          <p className={styles.topStorySubtext} style={textStyle}>
+            {s.subtext}
+          </p>
+        )}
+ 
+        {/* Optional image below text */}
         {s.image && (
           <div className={styles.topStoryImgWrap}>
-            <img src={s.image} alt="Story" className={styles.topStoryImg} />
+            <img src={s.image} alt="Top story" className={styles.topStoryImg} />
           </div>
         )}
       </div>
@@ -460,29 +481,55 @@ export function TopStory({ product }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────────
+// EMBEDDED FORM
+// ──
+
 export function EmbeddedForm({ product }) {
   const formLink = product.formLink;
   if (!formLink) return null;
  
-  const type      = detectFormType(formLink);
-  const isCognito = formLink.includes("cognitoforms.com");
- 
-  // Cognito URL typed/pasted as plain link → auto-resize via postMessage
-  const useAutoResize = type === "url" && isCognito;
+  const type    = detectFormType(formLink);
+  const caution = product.formCaution;
+  const hasCaution = caution?.enabled && (caution?.title || caution?.text);
  
   return (
     <section className={styles.formSection} id="product-form">
-      <div className="container">
-        <span className={styles.eyebrow}>Place Your Order</span>
-        <h2 className={styles.sectionTitle}>Order <em>Form</em></h2>
-        <p className={styles.sectionBody} style={{ marginBottom: 32 }}>
-          Fill in the form below. Payment on delivery — no upfront payment.
-        </p>
  
+      {/*
+        .formContainer centres the form card on desktop (max-width 700px)
+        and expands to full-width on mobile — no padding clipping the form.
+      */}
+      <div className={styles.formContainer}>
+ 
+        {/* Section header */}
+        <div className={styles.formHeader}>
+          <span className={styles.eyebrow}>
+  <span className={styles.finger}>👇</span>
+  HOW TO COMPLETE ORDER
+  <span className={styles.finger}>👇</span>
+</span>
+          <h2 className={styles.sectionTitle}>Fill The Form To Place Your <em>Order</em></h2>
+          <p className={styles.formSubtext}>
+            Payment Is On Delivery!
+          </p>
+        </div>
+ 
+        {/* ── Caution block — only shown when enabled + has content ── */}
+        {hasCaution && (
+          <div className={styles.formCaution}>
+            {caution.title && (
+              <p className={styles.formCautionTitle}>{caution.title}</p>
+            )}
+            {caution.text && (
+              <p className={styles.formCautionText}>{caution.text}</p>
+            )}
+          </div>
+        )}
+ 
+        {/* ── The form itself ── */}
         <div className={styles.formBox}>
-          {useAutoResize ? (
-            <CognitoFrame src={formLink} />
-          ) : type === "url" ? (
+          {type === "url" ? (
             <iframe
               src={formLink}
               className={styles.formFrame}
@@ -495,6 +542,9 @@ export function EmbeddedForm({ product }) {
           )}
         </div>
  
+        <p className={styles.formNote}>
+          🔒 Your information is safe and only used to process your order.
+        </p>
       </div>
     </section>
   );

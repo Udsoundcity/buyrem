@@ -11,7 +11,8 @@ const EMPTY = {
   purchases:0,rating:5.0,reviews:0,satisfaction:100,
   formLink:"",videoUrl:"",reviewScreenshots:[],freeGiftImage:"",
   announcementBar:{ enabled:false, text:"", bgColor:"#7C3AED", textColor:"#ffffff", showClose:true },
-  topStory:       { enabled:false, text:"", image:"" },
+   topStory: { enabled:false, text:"", subtext:"", image:"", bgColor:"", textColor:"" },
+    formCaution: { enabled:false, title:"", text:"" },
   customerStory:  { enabled:false, headline:"", content:"", image:"", ctaType:"whatsapp", ctaText:"Order Now" },
   usageComparison:{ enabled:false, autoplay:true, interval:3000,
     pairs:[{before:"",after:""},{before:"",after:""},{before:"",after:""},{before:"",after:""}] },
@@ -77,7 +78,8 @@ export default function ProductForm({ initial=null, isEdit=false }) {
     reviewScreenshots: initial.reviewScreenshots || [],
     freeGiftImage:     initial.freeGiftImage     || "",
     announcementBar:   { ...EMPTY.announcementBar,   ...(initial.announcementBar   || {}) },
-    topStory:          { ...EMPTY.topStory,          ...(initial.topStory          || {}) },
+    topStory:    { ...EMPTY.topStory,    ...(initial.topStory    || {}) },
+    formCaution: { ...EMPTY.formCaution, ...(initial.formCaution || {}) },
     customerStory:     { ...EMPTY.customerStory,     ...(initial.customerStory     || {}) },
     usageComparison:   { ...EMPTY.usageComparison,   ...(initial.usageComparison   || {}),
       pairs: Array.from({ length:4 }, (_, i) => (initial.usageComparison?.pairs?.[i] || { before:"", after:"" })) },
@@ -239,6 +241,53 @@ export default function ProductForm({ initial=null, isEdit=false }) {
                     </div>
                   )}
                 </div>
+                
+ <div className="admin-form-card">
+   <div className="admin-form-card-title">
+     ⚠️ Caution Message
+     <span style={{fontSize:12,fontWeight:400,color:"var(--a-muted)",marginLeft:8}}>— Optional</span>
+   </div>
+   <p className="admin-input-hint" style={{marginBottom:16}}>
+     Displays an orange warning box above the order form.
+   </p>
+
+   <Toggle label="Show Caution Warning"
+     checked={!!form.formCaution?.enabled}
+     onChange={v=>set("formCaution.enabled",v)}
+     hint="Toggle off to hide completely — leaves no empty space."/>
+
+   {form.formCaution?.enabled&&(<>
+     <Field label="Caution Title" hint='e.g. "CAUTION!!!" — shown bold in uppercase'>
+       <input className="admin-input" value={form.formCaution?.title||""}
+         onChange={e=>set("formCaution.title",e.target.value)}
+         placeholder="CAUTION!!!"/>
+     </Field>
+     <Field label="Caution Message" hint="Full warning text. Supports line breaks.">
+       <textarea className="admin-textarea" rows={5} value={form.formCaution?.text||""}
+         onChange={e=>set("formCaution.text",e.target.value)}
+         placeholder={"Our esteemed customer, please do not place an order if you are not ready to receive the product(s), travelling or do not have your money handy.\nPlease help us to serve you better."}/>
+     </Field>
+
+     {/* Live preview */}
+     {(form.formCaution?.title||form.formCaution?.text)&&(
+       <div style={{background:"rgba(249,115,22,0.06)",border:"2px solid rgba(249,115,22,0.4)",
+         borderRadius:12,padding:"16px 20px",marginTop:8,textAlign:"center"}}>
+         {form.formCaution?.title&&(
+           <p style={{fontWeight:800,color:"#E65C00",textTransform:"uppercase",
+            fontSize:15,marginBottom:8,letterSpacing:"0.5px"}}>
+            {form.formCaution.title}
+           </p>
+         )}
+        {form.formCaution?.text&&(
+          <p style={{fontWeight:600,color:"#E65C00",fontSize:13,
+            lineHeight:1.7,whiteSpace:"pre-line"}}>
+             {form.formCaution.text}
+           </p>
+         )}
+       </div>
+     )}
+   </>)}
+ </div>
 
                 <div className="admin-form-card">
                   <div className="admin-form-card-title">📊 Stats & Display</div>
@@ -550,6 +599,52 @@ export default function ProductForm({ initial=null, isEdit=false }) {
                       <Field label="Story Text" hint="Short attention-grabbing line displayed above the story image">
                         <textarea className="admin-textarea" rows={3} value={form.topStory?.text||""} onChange={e=>set("topStory.text",e.target.value)} placeholder="e.g. Thousands of Nigerians are already seeing results..."/>
                       </Field>
+                      [A] Subtitle field
+<Field label="Subtitle Text" hint="Smaller text below headline. Supports line breaks.">
+  <textarea className="admin-textarea" rows={3}
+    value={form.topStory?.subtext||""}
+    onChange={e=>set("topStory.subtext",e.target.value)}
+   placeholder="e.g. FREE DELIVERY — YOU ONLY PAY WHEN WE DELIVER."/>
+</Field>
+ 
+[B] Color pickers
+<div className="admin-grid-2">
+  <Field label="Background Color" hint="Empty = default dark background">
+    <div style={{display:"flex",gap:8,alignItems:"center"}}>
+      <input type="color" value={form.topStory?.bgColor||"#1a1a1a"}
+        onChange={e=>set("topStory.bgColor",e.target.value)}
+        style={{width:44,height:38,borderRadius:8,border:"1px solid #334155",
+          cursor:"pointer",padding:2,background:"transparent"}}/>
+      <input className="admin-input" value={form.topStory?.bgColor||""}
+        onChange={e=>set("topStory.bgColor",e.target.value)}
+        placeholder="Empty = dark default"/>
+      {form.topStory?.bgColor&&(
+        <button type="button" onClick={()=>set("topStory.bgColor","")}
+          style={{padding:"6px 10px",borderRadius:6,border:"1px solid #334155",
+            background:"none",color:"#94A3B8",cursor:"pointer",
+            fontSize:12,fontFamily:"inherit",flexShrink:0}}>✕ Clear</button>
+     )}
+    </div>
+  </Field>
+ <Field label="Text Color" hint="Empty = default white text">
+   <div style={{display:"flex",gap:8,alignItems:"center"}}>
+     <input type="color" value={form.topStory?.textColor||"#ffffff"}
+       onChange={e=>set("topStory.textColor",e.target.value)}
+       style={{width:44,height:38,borderRadius:8,border:"1px solid #334155",
+         cursor:"pointer",padding:2,background:"transparent"}}/>
+       <input className="admin-input" value={form.topStory?.textColor||""}
+       onChange={e=>set("topStory.textColor",e.target.value)}
+        placeholder="Empty = white default"/>
+    {form.topStory?.textColor&&(
+     <button type="button" onClick={()=>set("topStory.textColor","")}
+       style={{padding:"6px 10px",borderRadius:6,border:"1px solid #334155",
+            background:"none",color:"#94A3B8",cursor:"pointer",
+            fontSize:12,fontFamily:"inherit",flexShrink:0}}>✕ Clear</button>
+     )}
+   </div>
+  </Field>
+ </div>
+ 
                       <div className="admin-form-card-title" style={{fontSize:13,marginBottom:12,marginTop:4}}>Story Image <span style={{fontWeight:400,color:"var(--a-muted)"}}>— Optional</span></div>
                       <ImageUpload value={form.topStory?.image||""} onChange={url=>set("topStory.image",url)} hint="Wide banner image shown below the story text"/>
                     </>
