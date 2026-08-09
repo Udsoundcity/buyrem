@@ -11,7 +11,20 @@ const EMPTY = {
   purchases:0,rating:5.0,reviews:0,satisfaction:100,
   formLink:"",videoUrl:"",reviewScreenshots:[],freeGiftImage:"",
   announcementBar:{ enabled:false, text:"", bgColor:"#7C3AED", textColor:"#ffffff", showClose:true },
-   topStory: { enabled:false, text:"", subtext:"", image:"", bgColor:"", textColor:"" },
+  topStory: {
+     enabled:        false,
+     fixedStart:     "",      // text before the rotating word
+     rotatingWords:  [],      // array of highlighted words/phrases
+     fixedEnd:       "",      // text after the rotating word
+    description:    "",      // supporting text below headline
+     ctaText:        "",      // CTA button label
+     ctaLink:        "",      // CTA href (empty = scrolls to form)
+     highlightColor: "",      // rotating word color (empty = brand terra)
+     bgColor:        "",      // section background (empty = dark default)
+     textColor:      "",      // headline text color (empty = white)
+    animationSpeed: 800,    // ms between word changes
+   },
+   hideTestimonials: false, 
     formCaution: { enabled:false, title:"", text:"" },
   customerStory:  { enabled:false, headline:"", content:"", image:"", ctaType:"whatsapp", ctaText:"Order Now" },
   usageComparison:{ enabled:false, autoplay:true, interval:3000,
@@ -78,7 +91,14 @@ export default function ProductForm({ initial=null, isEdit=false }) {
     reviewScreenshots: initial.reviewScreenshots || [],
     freeGiftImage:     initial.freeGiftImage     || "",
     announcementBar:   { ...EMPTY.announcementBar,   ...(initial.announcementBar   || {}) },
-    topStory:    { ...EMPTY.topStory,    ...(initial.topStory    || {}) },
+   topStory: {
+     ...EMPTY.topStory,
+     ...(initial.topStory || {}),
+     rotatingWords: Array.isArray(initial?.topStory?.rotatingWords)
+       ? initial.topStory.rotatingWords
+       : [],
+   },
+   hideTestimonials: initial?.hideTestimonials ?? false,
     formCaution: { ...EMPTY.formCaution, ...(initial.formCaution || {}) },
     customerStory:     { ...EMPTY.customerStory,     ...(initial.customerStory     || {}) },
     usageComparison:   { ...EMPTY.usageComparison,   ...(initial.usageComparison   || {}),
@@ -453,6 +473,12 @@ export default function ProductForm({ initial=null, isEdit=false }) {
             {tab===3&&(
               <>
                 <div className="admin-form-card">
+                  <Toggle
+  label="Hide testimonials (use review screenshots instead)"
+   checked={!!form.hideTestimonials}
+   onChange={v=>set("hideTestimonials",v)}
+   hint="When on, the star-rating testimonials section is hidden on the product page."
+ />
                   <div className="admin-form-card-title">⭐ Customer Testimonials (3)</div>
                   {form.testimonials.map((t,i)=>(
                     <div key={i} className="admin-array-item">
@@ -591,65 +617,213 @@ export default function ProductForm({ initial=null, isEdit=false }) {
                 </div>
 
                 {/* Top Story */}
-                <div className="admin-form-card">
-                  <div className="admin-form-card-title">📰 Top Story <span style={{fontSize:12,fontWeight:400,color:"var(--a-muted)"}}>— Displays before hero</span></div>
-                  <Toggle label="Enable Top Story" checked={!!form.topStory?.enabled} onChange={v=>set("topStory.enabled",v)}/>
-                  {form.topStory?.enabled&&(
-                    <>
-                      <Field label="Story Text" hint="Short attention-grabbing line displayed above the story image">
-                        <textarea className="admin-textarea" rows={3} value={form.topStory?.text||""} onChange={e=>set("topStory.text",e.target.value)} placeholder="e.g. Thousands of Nigerians are already seeing results..."/>
-                      </Field>
-                      [A] Subtitle field
-<Field label="Subtitle Text" hint="Smaller text below headline. Supports line breaks.">
-  <textarea className="admin-textarea" rows={3}
-    value={form.topStory?.subtext||""}
-    onChange={e=>set("topStory.subtext",e.target.value)}
-   placeholder="e.g. FREE DELIVERY — YOU ONLY PAY WHEN WE DELIVER."/>
-</Field>
- 
-[B] Color pickers
-<div className="admin-grid-2">
-  <Field label="Background Color" hint="Empty = default dark background">
-    <div style={{display:"flex",gap:8,alignItems:"center"}}>
-      <input type="color" value={form.topStory?.bgColor||"#1a1a1a"}
-        onChange={e=>set("topStory.bgColor",e.target.value)}
-        style={{width:44,height:38,borderRadius:8,border:"1px solid #334155",
-          cursor:"pointer",padding:2,background:"transparent"}}/>
-      <input className="admin-input" value={form.topStory?.bgColor||""}
-        onChange={e=>set("topStory.bgColor",e.target.value)}
-        placeholder="Empty = dark default"/>
-      {form.topStory?.bgColor&&(
-        <button type="button" onClick={()=>set("topStory.bgColor","")}
-          style={{padding:"6px 10px",borderRadius:6,border:"1px solid #334155",
-            background:"none",color:"#94A3B8",cursor:"pointer",
-            fontSize:12,fontFamily:"inherit",flexShrink:0}}>✕ Clear</button>
-     )}
+      <div className="admin-form-card">
+  <div className="admin-form-card-title">
+    📢 Top Story Section
+    <span style={{fontSize:12,fontWeight:400,color:"var(--a-muted)",marginLeft:8}}>
+      — Rotating headline CTA
+    </span>
+  </div>
+  <p className="admin-input-hint" style={{marginBottom:16}}>
+    Shows above the hero. The highlighted word rotates automatically between
+    your configured phrases.
+  </p>
+
+  <Toggle
+    label="Enable Top Story"
+    checked={!!form.topStory?.enabled}
+    onChange={v=>set("topStory.enabled",v)}
+    hint="Toggle off to hide completely — no empty space left behind."
+  />
+
+  {form.topStory?.enabled && (<>
+
+    // ── Headline parts ──────────────────────────────────────────
+    <div className="admin-grid-2">
+      <Field label="Headline — Fixed Start" hint='e.g. "Say goodbye to"'>
+        <input className="admin-input"
+          value={form.topStory?.fixedStart||""}
+          onChange={e=>set("topStory.fixedStart",e.target.value)}
+          placeholder="Say goodbye to"/>
+      </Field>
+      <Field label="Headline — Fixed End" hint='e.g. "with PerfectX" (optional)'>
+        <input className="admin-input"
+          value={form.topStory?.fixedEnd||""}
+          onChange={e=>set("topStory.fixedEnd",e.target.value)}
+          placeholder="with PerfectX"/>
+      </Field>
     </div>
-  </Field>
- <Field label="Text Color" hint="Empty = default white text">
-   <div style={{display:"flex",gap:8,alignItems:"center"}}>
-     <input type="color" value={form.topStory?.textColor||"#ffffff"}
-       onChange={e=>set("topStory.textColor",e.target.value)}
-       style={{width:44,height:38,borderRadius:8,border:"1px solid #334155",
-         cursor:"pointer",padding:2,background:"transparent"}}/>
-       <input className="admin-input" value={form.topStory?.textColor||""}
-       onChange={e=>set("topStory.textColor",e.target.value)}
-        placeholder="Empty = white default"/>
-    {form.topStory?.textColor&&(
-     <button type="button" onClick={()=>set("topStory.textColor","")}
-       style={{padding:"6px 10px",borderRadius:6,border:"1px solid #334155",
-            background:"none",color:"#94A3B8",cursor:"pointer",
-            fontSize:12,fontFamily:"inherit",flexShrink:0}}>✕ Clear</button>
-     )}
-   </div>
-  </Field>
- </div>
- 
-                      <div className="admin-form-card-title" style={{fontSize:13,marginBottom:12,marginTop:4}}>Story Image <span style={{fontWeight:400,color:"var(--a-muted)"}}>— Optional</span></div>
-                      <ImageUpload value={form.topStory?.image||""} onChange={url=>set("topStory.image",url)} hint="Wide banner image shown below the story text"/>
-                    </>
-                  )}
-                </div>
+
+    // ── Rotating words array ────────────────────────────────────
+    <div className="admin-form-card-title" style={{fontSize:13,marginBottom:10,marginTop:4}}>
+      🔄 Rotating Highlighted Words/Phrases
+      <span style={{fontWeight:400,color:"var(--a-muted)",marginLeft:8}}>
+        — add as many as you want
+      </span>
+    </div>
+    <p className="admin-input-hint" style={{marginBottom:12}}>
+      Each item replaces the highlighted word in the headline one at a time.
+      e.g. "Muscle pains" → "Body pains" → "Joint pains"
+    </p>
+
+    {(form.topStory?.rotatingWords||[]).map((word,i)=>(
+      <div key={i} style={{display:"flex",gap:8,marginBottom:8}}>
+        <input className="admin-input" style={{flex:1}}
+          value={word}
+          onChange={e=>{
+            const updated=[...(form.topStory?.rotatingWords||[])];
+            updated[i]=e.target.value;
+            set("topStory.rotatingWords",updated);
+          }}
+          placeholder={`Word / phrase ${i+1}`}/>
+        <button
+          onClick={()=>{
+            const updated=(form.topStory?.rotatingWords||[]).filter((_,idx)=>idx!==i);
+            set("topStory.rotatingWords",updated);
+          }}
+          style={{padding:"8px 12px",borderRadius:8,flexShrink:0,
+            background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.2)",
+            color:"#FCA5A5",cursor:"pointer",fontFamily:"inherit"}}>
+          ✕
+        </button>
+      </div>
+    ))}
+    <button className="btn-admin-ghost"
+      style={{width:"100%",justifyContent:"center",marginBottom:16}}
+      onClick={()=>set("topStory.rotatingWords",[...(form.topStory?.rotatingWords||[]),""])}>
+      + Add Word / Phrase
+    </button>
+
+    // ── Description + CTA ───────────────────────────────────────
+    <Field label="Supporting Description" hint="Short text below the headline. Optional.">
+      <textarea className="admin-textarea" rows={2}
+        value={form.topStory?.description||""}
+        onChange={e=>set("topStory.description",e.target.value)}
+        placeholder="e.g. Trusted by 1,000+ Nigerians. Pay only on delivery."/>
+    </Field>
+
+    <div className="admin-grid-2">
+      <Field label="CTA Button Text" hint='e.g. "Shop this product"'>
+        <input className="admin-input"
+          value={form.topStory?.ctaText||""}
+          onChange={e=>set("topStory.ctaText",e.target.value)}
+          placeholder="Shop this product"/>
+      </Field>
+      <Field label="CTA Link" hint="URL or #product-form to scroll to order form">
+        <input className="admin-input"
+          value={form.topStory?.ctaLink||""}
+          onChange={e=>set("topStory.ctaLink",e.target.value)}
+          placeholder="#product-form"/>
+      </Field>
+    </div>
+
+    // ── Timing + Colors ─────────────────────────────────────────
+    <Field label="Animation Speed (ms)"
+      hint="Time between word changes. 1000 = 1 second. Minimum 300ms.">
+      <input className="admin-input" type="number" min="300" step="100"
+        value={form.topStory?.animationSpeed||1000}
+        onChange={e=>set("topStory.animationSpeed",Number(e.target.value))}/>
+    </Field>
+
+    <div className="admin-grid-3">
+      <Field label="Highlight Color" hint="Rotating word color. Empty = brand default.">
+        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+          <input type="color"
+            value={form.topStory?.highlightColor||"#C4714A"}
+            onChange={e=>set("topStory.highlightColor",e.target.value)}
+            style={{width:44,height:38,borderRadius:8,border:"1px solid #334155",
+              cursor:"pointer",padding:2,background:"transparent"}}/>
+          <input className="admin-input" style={{flex:1}}
+            value={form.topStory?.highlightColor||""}
+            onChange={e=>set("topStory.highlightColor",e.target.value)}
+            placeholder="Empty = brand default"/>
+          {form.topStory?.highlightColor&&(
+            <button type="button" onClick={()=>set("topStory.highlightColor","")}
+              style={{padding:"6px 10px",borderRadius:6,border:"1px solid #334155",
+                background:"none",color:"#94A3B8",cursor:"pointer",
+                fontSize:12,fontFamily:"inherit",flexShrink:0}}>✕</button>
+          )}
+        </div>
+      </Field>
+
+      <Field label="Background Color" hint="Empty = dark default.">
+        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+          <input type="color"
+            value={form.topStory?.bgColor||"#1a1a2e"}
+            onChange={e=>set("topStory.bgColor",e.target.value)}
+            style={{width:44,height:38,borderRadius:8,border:"1px solid #334155",
+              cursor:"pointer",padding:2,background:"transparent"}}/>
+          <input className="admin-input" style={{flex:1}}
+            value={form.topStory?.bgColor||""}
+            onChange={e=>set("topStory.bgColor",e.target.value)}
+            placeholder="Empty = dark default"/>
+          {form.topStory?.bgColor&&(
+            <button type="button" onClick={()=>set("topStory.bgColor","")}
+              style={{padding:"6px 10px",borderRadius:6,border:"1px solid #334155",
+                background:"none",color:"#94A3B8",cursor:"pointer",
+                fontSize:12,fontFamily:"inherit",flexShrink:0}}>✕</button>
+          )}
+        </div>
+      </Field>
+
+      <Field label="Text Color" hint="Empty = white default.">
+        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+          <input type="color"
+            value={form.topStory?.textColor||"#ffffff"}
+            onChange={e=>set("topStory.textColor",e.target.value)}
+            style={{width:44,height:38,borderRadius:8,border:"1px solid #334155",
+              cursor:"pointer",padding:2,background:"transparent"}}/>
+          <input className="admin-input" style={{flex:1}}
+            value={form.topStory?.textColor||""}
+            onChange={e=>set("topStory.textColor",e.target.value)}
+            placeholder="Empty = white default"/>
+          {form.topStory?.textColor&&(
+            <button type="button" onClick={()=>set("topStory.textColor","")}
+              style={{padding:"6px 10px",borderRadius:6,border:"1px solid #334155",
+                background:"none",color:"#94A3B8",cursor:"pointer",
+                fontSize:12,fontFamily:"inherit",flexShrink:0}}>✕</button>
+          )}
+        </div>
+      </Field>
+    </div>
+
+    // ── Live Preview ────────────────────────────────────────────
+    {(form.topStory?.fixedStart||form.topStory?.rotatingWords?.length>0)&&(
+      <div style={{
+        background:form.topStory?.bgColor||"#1a1a2e",
+        borderRadius:12,padding:"22px 24px",marginTop:8,textAlign:"center"
+      }}>
+        <p style={{
+          fontFamily:"'Syne',sans-serif",
+          fontSize:22,fontWeight:800,
+          color:form.topStory?.textColor||"#fff",
+          lineHeight:1.2,margin:0
+        }}>
+          {form.topStory?.fixedStart||""}{" "}
+          <span style={{color:form.topStory?.highlightColor||"#C4714A"}}>
+            {form.topStory?.rotatingWords?.[0]||"highlighted word"}
+          </span>
+          {" "}{form.topStory?.fixedEnd||""}
+        </p>
+        {form.topStory?.description&&(
+          <p style={{color:"rgba(255,255,255,0.75)",fontSize:14,marginTop:10,lineHeight:1.6}}>
+            {form.topStory.description}
+          </p>
+        )}
+        {form.topStory?.ctaText&&(
+          <div style={{marginTop:14,display:"inline-block",
+            padding:"11px 28px",borderRadius:100,
+            background:form.topStory?.highlightColor||"#C4714A",
+            color:"#fff",fontWeight:700,fontSize:14}}>
+            {form.topStory.ctaText}
+          </div>
+        )}
+      </div>
+    )}
+  </>)}
+</div>
+  
+
 
                 {/* Customer Story */}
                 <div className="admin-form-card">

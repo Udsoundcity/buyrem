@@ -289,13 +289,18 @@ export function ReviewScreenshots({ product }) {
 // ─────────────────────────────────────────────────────────────────
 export function TestimonialsSection({ product }) {
   const { modal, setModal, trigger } = useOrderAction(product);
+
+  // Hide when admin toggled off testimonials
+  // (typically when review screenshots are being used instead)
+  if (product.hideTestimonials) return null;
+
   return (
     <>
       <section className={styles.testimonials}>
         <div className="container">
-          <span className={styles.eyebrow}>Real customers Reviews</span>
+          <span className={styles.eyebrow}>Real customers</span>
           <h2 className={styles.sectionTitle}>
-            They Are<br /><em>Satisfied!</em>
+            They didn&apos;t<br /><em>believe it either.</em>
           </h2>
           <div className={styles.testiList}>
             {product.testimonials?.map((t, i) => (
@@ -312,7 +317,7 @@ export function TestimonialsSection({ product }) {
             ))}
           </div>
           <button className={styles.testiCta} onClick={trigger}>
-            <CartIcon size={16} /> Order Now — Pay On Delivery Day
+            <CartIcon size={16} /> Order Now — Payment On Delivery
           </button>
         </div>
       </section>
@@ -445,42 +450,103 @@ export function CustomerStory({ product }) {
 // ─────────────────────────────────────────────────────────────────
 export function TopStory({ product }) {
   const s = product.topStory;
-  if (!s?.enabled || (!s.text && !s.subtext && !s.image)) return null;
- 
-  // Only apply inline overrides when the admin has explicitly set a value
-  const sectionStyle = s.bgColor ? { background: s.bgColor } : {};
-  const textStyle    = s.textColor ? { color: s.textColor } : {};
- 
+
+  // Render nothing if disabled or no content configured
+  if (!s?.enabled) return null;
+
+  const words = Array.isArray(s.rotatingWords)
+    ? s.rotatingWords.filter(w => w?.trim())
+    : [];
+
+  const hasHeadline = s.fixedStart || s.fixedEnd || words.length > 0;
+  if (!hasHeadline && !s.description && !s.ctaText) return null;
+
+  const [idx,    setIdx]    = useState(0);
+  const [fading, setFading] = useState(false);
+
+  const speed = Math.max(Number(s.animationSpeed) || 1000, 300);
+
+  useEffect(() => {
+    if (words.length <= 1) return;
+    const id = setInterval(() => {
+      setFading(true);
+      // After fade-out (300ms) swap word, then fade back in
+      const swap = setTimeout(() => {
+        setIdx(prev => (prev + 1) % words.length);
+        setFading(false);
+      }, 300);
+      return () => clearTimeout(swap);
+    }, speed);
+    return () => clearInterval(id);
+  }, [words.length, speed]);
+
+  const currentWord = words[idx] ?? "";
+
+  // Only apply inline color overrides when explicitly set by admin
+  const sectionStyle = s.bgColor    ? { background: s.bgColor } : {};
+  const textStyle    = s.textColor  ? { color: s.textColor }    : {};
+  const hlStyle      = s.highlightColor
+    ? { color: s.highlightColor }
+    : {};  // CSS provides default terra color
+
   return (
     <section className={styles.topStory} style={sectionStyle}>
-      {/* Full-width inner — no container cap so it reads edge-to-edge */}
       <div className={styles.topStoryInner}>
- 
-        {/* Main headline — large, bold, centred */}
-        {s.text && (
+
+        {/* ── Headline with rotating highlighted word ── */}
+        {hasHeadline && (
           <h2 className={styles.topStoryHeadline} style={textStyle}>
-            {s.text}
+            {s.fixedStart && (
+              <span className={styles.topStoryFixed}>{s.fixedStart} </span>
+            )}
+            {currentWord && (
+              <span
+                className={`${styles.topStoryRotating} ${fading ? styles.topStoryFading : ""}`}
+                style={hlStyle}
+              >
+                {currentWord}
+              </span>
+            )}
+            {s.fixedEnd && (
+              <span className={styles.topStoryFixed}> {s.fixedEnd}</span>
+            )}
           </h2>
         )}
- 
-        {/* Subtitle / supporting copy */}
-        {s.subtext && (
-          <p className={styles.topStorySubtext} style={textStyle}>
-            {s.subtext}
+
+        {/* ── Dot indicators (only when multiple words) ── */}
+        {words.length > 1 && (
+          <div className={styles.topStoryDots} aria-hidden>
+            {words.map((_, i) => (
+              <button
+                key={i}
+                className={`${styles.topStoryDot} ${i === idx ? styles.topStoryDotActive : ""}`}
+                onClick={() => { setIdx(i); setFading(false); }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* ── Description ── */}
+        {s.description && (
+          <p className={styles.topStoryDesc} style={textStyle}>
+            {s.description}
           </p>
         )}
- 
-        {/* Optional image below text */}
-        {s.image && (
-          <div className={styles.topStoryImgWrap}>
-            <img src={s.image} alt="Top story" className={styles.topStoryImg} />
-          </div>
+
+        {/* ── CTA Button ── */}
+        {s.ctaText && (
+          <a
+            href={s.ctaLink || "#product-form"}
+            className={styles.topStoryCta}
+            style={s.highlightColor ? { background: s.highlightColor, borderColor: s.highlightColor } : {}}
+          >
+            {s.ctaText}
+          </a>
         )}
       </div>
     </section>
   );
 }
-
 // ─────────────────────────────────────────────────────────────────
 // EMBEDDED FORM
 // ──
@@ -629,20 +695,66 @@ export function ProblemSolution({ product }) {
 export function Features({ product }) { return <ResultsList product={product} />; }
 export function Testimonials({ product }) { return <TestimonialsSection product={product} />; }
 export function ProductImages({ product }) {
-  const imgs = product.images?.filter(i => i.src) || [];
+  const imgs = (product.images || []).filter(i => i?.src);
   if (!imgs.length) return null;
+
+  const [current, setCurrent] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    if (imgs.length <= 1) return;
+    const id = setInterval(() => {
+      // Fade out → swap → fade in
+      setVisible(false);
+      const swap = setTimeout(() => {
+        setCurrent(prev => (prev + 1) % imgs.length);
+        setVisible(true);
+      }, 200); // matches CSS transition duration
+      return () => clearTimeout(swap);
+    }, 950);
+    return () => clearInterval(id);
+  }, [imgs.length]);
+
+  const img = imgs[current];
+
   return (
-    <section className={styles.screenshots}>
+    <section className={styles.gallerySection}>
       <div className="container">
         <span className={styles.eyebrow}>Product Gallery</span>
         <h2 className={styles.sectionTitle}>See It <em>Up Close</em></h2>
-        <div className={styles.shotGrid}>
-          {imgs.map((img, i) => (
-            <div key={i} className={styles.shotCard}>
-              <img src={img.src} alt={img.alt} className={styles.shotImg} />
-              {img.label && <div className={styles.shotLabel}>{img.label}</div>}
+
+        <div className={styles.galleryCard}>
+
+          {/* Single image display with fade */}
+          <div
+            className={styles.galleryImgWrap}
+            style={{ opacity: visible ? 1 : 0 }}
+          >
+            <img
+              src={img.src}
+              alt={img.alt || `Image ${current + 1}`}
+              className={styles.galleryImg}
+            />
+          </div>
+
+          {/* Label */}
+          {img.label && (
+            <div className={styles.galleryLabel}>{img.label}</div>
+          )}
+
+          {/* Dot navigation */}
+          {imgs.length > 1 && (
+            <div className={styles.galleryDots}>
+              {imgs.map((_, i) => (
+                <button
+                  key={i}
+                  className={`${styles.galleryDot} ${i === current ? styles.galleryDotActive : ""}`}
+                  onClick={() => { setCurrent(i); setVisible(true); }}
+                  aria-label={`Image ${i + 1}`}
+                />
+              ))}
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

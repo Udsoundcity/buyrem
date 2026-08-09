@@ -172,15 +172,12 @@
 
 /* ── Top Story ── */
 .topStory {
-  /* Dark default — overridden inline when admin sets bgColor */
-  background: #1a1a1a;
+  background: #1a1a2e;   /* default dark — overridden inline when bgColor set */
+  padding: 48px 0;
   width: 100%;
-  padding: 44px 0;
 }
- 
 .topStoryInner {
-  /* Slightly wider than the site container so it feels full-bleed */
-  max-width: 900px;
+  max-width: 780px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -189,41 +186,76 @@
   gap: 18px;
   text-align: center;
 }
- 
 .topStoryHeadline {
-  /* Large, punchy, commanding — mirrors the reference screenshot */
   font-family: 'Syne', 'DM Serif Display', serif;
-  font-size: clamp(28px, 6vw, 52px);
+  font-size: clamp(26px, 5.5vw, 46px);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.12;
+  line-height: 1.14;
   margin: 0;
-  /* Overridden inline when admin sets textColor */
+  /* Inline textColor overrides when admin sets it */
 }
- 
-.topStorySubtext {
-  font-size: clamp(14px, 2.2vw, 18px);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.65;
+.topStoryFixed {
+  /* plain white portion of headline */
+  color: inherit;
+}
+.topStoryRotating {
+  display: inline;
+  color: var(--terra);            /* default highlight — overridden inline */
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+.topStoryFading {
+  opacity: 0;
+  transform: translateY(-10px);   /* slides up as it fades out */
+}
+.topStoryDots {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+}
+.topStoryDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  border: none; cursor: pointer; padding: 0;
+  transition: all 0.25s;
+}
+.topStoryDotActive {
+  background: #fff;
+  width: 22px;
+  border-radius: 3px;
+}
+.topStoryDesc {
+  font-size: clamp(14px, 2vw, 17px);
+  color: rgba(255,255,255,0.8);
+  line-height: 1.7;
   margin: 0;
-  max-width: 720px;
-  white-space: pre-line; /* respects line breaks entered in admin */
+  max-width: 620px;
+  white-space: pre-line;
 }
- 
-.topStoryImgWrap {
-  width: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  margin-top: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.topStoryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 34px;
+  background: var(--terra);
+  border: 2px solid var(--terra);
+  color: #fff;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.22s;
+  cursor: pointer;
 }
- 
-.topStoryImg {
-  width: 100%;
-  display: block;
-  max-height: 420px;
-  object-fit: cover;
+.topStoryCta:hover {
+  background: var(--terra-l);
+  border-color: var(--terra-l);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(196,113,74,0.4);
 }
 
 /* ── FAQ ── */
@@ -440,6 +472,59 @@
   line-height: 1.6;
 }
 
+/* IMAGE GALLERY CSS */
+.gallerySection { padding: 56px 0; background: var(--warm); }
+
+.galleryCard {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(196,113,74,0.12);
+  box-shadow: 0 4px 24px rgba(196,113,74,0.08);
+  background: #fff;
+  margin-top: 24px;
+  /* No max-width — fills container */
+}
+.galleryImgWrap {
+  width: 100%;
+  transition: opacity 0.2s ease;    /* matches the 200ms swap in JS */
+  background: #fff;
+}
+.galleryImg {
+  width: 100%;
+  display: block;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;              /* no distortion, maintains ratio */
+  background: #fff;
+}
+.galleryLabel {
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-m);
+  text-align: center;
+  background: #fff;
+  border-top: 1px solid rgba(196,113,74,0.08);
+}
+.galleryDots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px 0;
+  background: #fff;
+}
+.galleryDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(196,113,74,0.25);
+  border: none; cursor: pointer; padding: 0;
+  transition: all 0.25s;
+}
+.galleryDotActive {
+  background: var(--terra);
+  width: 22px;
+  border-radius: 3px;
+}
+
 
 
 /* ── Responsive ── */
@@ -459,12 +544,10 @@
   .fgNote     { font-size: 12px; }
 }
 @media (max-width: 600px) {
-  .topStory       { padding: 32px 0; }
-  .topStoryInner  { padding: 0 16px; gap: 14px; }
-  .topStoryImgWrap{ border-radius: 12px; }
-  .topStoryImg    { max-height: 260px; }
+  .topStory      { padding: 36px 0; }
+  .topStoryInner { padding: 0 18px; gap: 14px; }
+  .topStoryCta   { padding: 13px 28px; font-size: 14px; }
 }
- 
 @media (max-width: 768px) {
   .formSection   { padding: 56px 0; }
   /* Remove horizontal padding on mobile so form is edge-to-edge */

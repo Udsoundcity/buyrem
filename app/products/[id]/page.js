@@ -53,7 +53,7 @@ export default async function ProductPage({ params }) {
       <HowItWorks product={product} />
       <ProductImages product={product} />
       <ReviewScreenshots product={product} />
-      {/* <TestimonialsSection product={product} /> */}
+      <TestimonialsSection product={product} /> 
       <UrgencySection product={product} />
       <VideoSection product={product} />
       <CustomerStory product={product} />
