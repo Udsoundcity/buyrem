@@ -17,12 +17,13 @@ const EMPTY = {
      rotatingWords:  [],      // array of highlighted words/phrases
      fixedEnd:       "",      // text after the rotating word
     description:    "",      // supporting text below headline
+    preCtaImage: "",
      ctaText:        "",      // CTA button label
      ctaLink:        "",      // CTA href (empty = scrolls to form)
      highlightColor: "",      // rotating word color (empty = brand terra)
      bgColor:        "",      // section background (empty = dark default)
      textColor:      "",      // headline text color (empty = white)
-    animationSpeed: 800,    // ms between word changes
+    animationSpeed: 1000,    // ms between word changes
    },
    hideTestimonials: false, 
     formCaution: { enabled:false, title:"", text:"" },
@@ -693,6 +694,26 @@ export default function ProductForm({ initial=null, isEdit=false }) {
       onClick={()=>set("topStory.rotatingWords",[...(form.topStory?.rotatingWords||[]),""])}>
       + Add Word / Phrase
     </button>
+
+    <div className="admin-form-card-title" style={{fontSize:13,marginBottom:12,marginTop:4}}>
+   🖼️ Image Before CTA Button
+   <span style={{fontWeight:400,color:"var(--a-muted)",marginLeft:8}}>— Optional</span>
+ </div>
+ <p className="admin-input-hint" style={{marginBottom:12}}>
+   Shown between the description and the CTA button. Leave empty to skip.
+ </p>
+ <ImageUpload
+   value={form.topStory?.preCtaImage||""}
+   onChange={url=>set("topStory.preCtaImage",url)}
+   hint="Upload a product photo or promotional image"
+ />
+ {form.topStory?.preCtaImage&&(
+   <div style={{marginTop:10,borderRadius:10,overflow:"hidden",
+     border:"1px solid #334155",maxHeight:160}}>
+     <img src={form.topStory.preCtaImage} alt="Preview"
+       style={{width:"100%",display:"block",objectFit:"cover",maxHeight:160}}/>
+   </div>
+ )}
 
     // ── Description + CTA ───────────────────────────────────────
     <Field label="Supporting Description" hint="Short text below the headline. Optional.">

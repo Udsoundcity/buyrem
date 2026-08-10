@@ -1,5 +1,5 @@
 .page{background:var(--cream)}
-.finalCta{background:var(--cream);padding:90px 0;border-top:1px solid rgba(196,113,74,0.12)}
+.finalCta{background:var(--cream);padding:30px 0;border-top:1px solid rgba(196,113,74,0.12)}
 .finalInner{text-align:center}
 .finalTitle{font-family:'DM Serif Display',serif;font-size:clamp(32px,4.5vw,52px);color:var(--brown);margin-bottom:14px;line-height:1.15}
 .finalTitle em{color:var(--terra);font-style:italic}

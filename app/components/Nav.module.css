@@ -131,6 +131,8 @@
 }
 .mobileWa:hover { background: #1ebe5d; }
 
+
+
 @media (max-width: 900px) {
   .inner { padding: 0 20px; }
   .links, .waBtn { display: none; }

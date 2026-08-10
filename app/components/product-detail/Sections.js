@@ -450,8 +450,6 @@ export function CustomerStory({ product }) {
 // ─────────────────────────────────────────────────────────────────
 export function TopStory({ product }) {
   const s = product.topStory;
-
-  // Render nothing if disabled or no content configured
   if (!s?.enabled) return null;
 
   const words = Array.isArray(s.rotatingWords)
@@ -459,7 +457,7 @@ export function TopStory({ product }) {
     : [];
 
   const hasHeadline = s.fixedStart || s.fixedEnd || words.length > 0;
-  if (!hasHeadline && !s.description && !s.ctaText) return null;
+  if (!hasHeadline && !s.description && !s.ctaText && !s.preCtaImage) return null;
 
   const [idx,    setIdx]    = useState(0);
   const [fading, setFading] = useState(false);
@@ -470,30 +468,26 @@ export function TopStory({ product }) {
     if (words.length <= 1) return;
     const id = setInterval(() => {
       setFading(true);
-      // After fade-out (300ms) swap word, then fade back in
       const swap = setTimeout(() => {
         setIdx(prev => (prev + 1) % words.length);
         setFading(false);
-      }, 300);
+      }, 250);
       return () => clearTimeout(swap);
     }, speed);
     return () => clearInterval(id);
   }, [words.length, speed]);
 
   const currentWord = words[idx] ?? "";
-
-  // Only apply inline color overrides when explicitly set by admin
-  const sectionStyle = s.bgColor    ? { background: s.bgColor } : {};
-  const textStyle    = s.textColor  ? { color: s.textColor }    : {};
-  const hlStyle      = s.highlightColor
-    ? { color: s.highlightColor }
-    : {};  // CSS provides default terra color
+  const sectionStyle = s.bgColor   ? { background: s.bgColor } : {};
+  const textStyle    = s.textColor ? { color: s.textColor }    : {};
+  const hlStyle      = s.highlightColor ? { color: s.highlightColor } : {};
 
   return (
-    <section className={styles.topStory} style={sectionStyle}>
+    // id="top-story" is REQUIRED for FormVisibilityObserver
+    <section id="top-story" className={styles.topStory} style={sectionStyle}>
       <div className={styles.topStoryInner}>
 
-        {/* ── Headline with rotating highlighted word ── */}
+        {/* Headline with rotating word */}
         {hasHeadline && (
           <h2 className={styles.topStoryHeadline} style={textStyle}>
             {s.fixedStart && (
@@ -513,7 +507,7 @@ export function TopStory({ product }) {
           </h2>
         )}
 
-        {/* ── Dot indicators (only when multiple words) ── */}
+        {/* Dot indicators */}
         {words.length > 1 && (
           <div className={styles.topStoryDots} aria-hidden>
             {words.map((_, i) => (
@@ -526,19 +520,33 @@ export function TopStory({ product }) {
           </div>
         )}
 
-        {/* ── Description ── */}
+        {/* Description */}
         {s.description && (
           <p className={styles.topStoryDesc} style={textStyle}>
             {s.description}
           </p>
         )}
 
-        {/* ── CTA Button ── */}
+        {/* Optional image — shown between description and CTA */}
+        {s.preCtaImage && (
+          <div className={styles.topStoryPreCtaImgWrap}>
+            <img
+              src={s.preCtaImage}
+              alt="Product preview"
+              className={styles.topStoryPreCtaImg}
+            />
+          </div>
+        )}
+
+        {/* CTA button */}
         {s.ctaText && (
           <a
             href={s.ctaLink || "#product-form"}
             className={styles.topStoryCta}
-            style={s.highlightColor ? { background: s.highlightColor, borderColor: s.highlightColor } : {}}
+            style={s.highlightColor
+              ? { background: s.highlightColor, borderColor: s.highlightColor }
+              : {}
+            }
           >
             {s.ctaText}
           </a>
@@ -547,27 +555,26 @@ export function TopStory({ product }) {
     </section>
   );
 }
+
 // ─────────────────────────────────────────────────────────────────
 // EMBEDDED FORM
 // ──
 
+// ══ 4. REPLACE export function EmbeddedForm ══════════════════════
+//  Key fix: formFrame uses height:"auto" + smaller min-height
+//  so Cognito dropdown forms don't leave huge blank space below.
 export function EmbeddedForm({ product }) {
   const formLink = product.formLink;
   if (!formLink) return null;
- 
+
   const type    = detectFormType(formLink);
   const caution = product.formCaution;
   const hasCaution = caution?.enabled && (caution?.title || caution?.text);
- 
+
   return (
     <section className={styles.formSection} id="product-form">
- 
-      {/*
-        .formContainer centres the form card on desktop (max-width 700px)
-        and expands to full-width on mobile — no padding clipping the form.
-      */}
       <div className={styles.formContainer}>
- 
+
         {/* Section header */}
         <div className={styles.formHeader}>
           <span className={styles.eyebrow}>
@@ -580,8 +587,7 @@ export function EmbeddedForm({ product }) {
             Payment Is On Delivery!
           </p>
         </div>
- 
-        {/* ── Caution block — only shown when enabled + has content ── */}
+
         {hasCaution && (
           <div className={styles.formCaution}>
             {caution.title && (
@@ -592,8 +598,7 @@ export function EmbeddedForm({ product }) {
             )}
           </div>
         )}
- 
-        {/* ── The form itself ── */}
+
         <div className={styles.formBox}>
           {type === "url" ? (
             <iframe
@@ -607,10 +612,6 @@ export function EmbeddedForm({ product }) {
             <ScriptInjector code={formLink} />
           )}
         </div>
- 
-        <p className={styles.formNote}>
-          🔒 Your information is safe and only used to process your order.
-        </p>
       </div>
     </section>
   );

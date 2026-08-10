@@ -4,43 +4,46 @@ import { useEffect } from "react";
 // ─────────────────────────────────────────────────────────────────
 //  FormVisibilityObserver
 //
-//  Watches #product-form with IntersectionObserver.
-//  Adds/removes  body.form-in-view  class when the section
-//  enters or leaves the viewport.
+//  Watches BOTH #top-story AND #product-form via IntersectionObserver.
+//  Toggles body classes used by CSS to hide sticky bar + WA button:
 //
-//  Components that should hide while the form is visible add:
-//    :global(body.form-in-view) .yourClass { ... hide styles ... }
+//    body.form-in-view        → form section visible
+//    body.topstory-in-view    → top story section visible
 //
+//  CSS in ProductHero.module.css and Nav.module.css handles hiding.
 //  Returns null — no DOM output.
-//  Place once inside the product detail page.
 // ─────────────────────────────────────────────────────────────────
 export default function FormVisibilityObserver() {
   useEffect(() => {
-    const formEl = document.getElementById("product-form");
+    const targets = [
+      { id: "top-story",    cls: "topstory-in-view" },
+      { id: "product-form", cls: "form-in-view"     },
+    ];
 
-    // If this product has no embedded form, do nothing
-    if (!formEl) return;
+    const observers = targets.map(({ id, cls }) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Toggle class instantly — CSS transitions handle the animation
-        document.body.classList.toggle("form-in-view", entry.isIntersecting);
-      },
-      {
-        // Fire as soon as any pixel of the form enters or exits
-        threshold: 0,
-        // Trigger 20px early on the way down so the bar hides
-        // before the form appears, not after
-        rootMargin: "0px 0px -20px 0px",
-      }
-    );
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          document.body.classList.toggle(cls, entry.isIntersecting);
+        },
+        {
+          threshold:  0,
+          // Trigger 20px before the section enters so the bar
+          // hides just before the section appears
+          rootMargin: "0px 0px -20px 0px",
+        }
+      );
 
-    observer.observe(formEl);
+      observer.observe(el);
+      return observer;
+    });
 
-    // Clean up on unmount (navigating away)
     return () => {
-      observer.disconnect();
-      document.body.classList.remove("form-in-view");
+      observers.forEach(o => o?.disconnect());
+      // Clean up both classes on unmount
+      document.body.classList.remove("form-in-view", "topstory-in-view");
     };
   }, []);
 

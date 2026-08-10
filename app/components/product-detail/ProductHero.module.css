@@ -159,9 +159,19 @@
   opacity: 0;
   pointer-events: none;
 }
- 
-/* Hide the sticky hero bar (social proof bar) when form is visible */
 :global(body.form-in-view) .stickyBar {
+  transform: translateY(-110%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hide when TOP STORY is visible */
+:global(body.topstory-in-view) .mobileBar {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+}
+:global(body.topstory-in-view) .stickyBar {
   transform: translateY(-110%);
   opacity: 0;
   pointer-events: none;
