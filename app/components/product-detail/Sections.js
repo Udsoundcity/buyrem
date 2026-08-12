@@ -88,38 +88,57 @@ export function TrustStrip() {
 export function ProblemSection({ product }) {
   const p = product.problem;
   if (!p?.title && !p?.body) return null;
+
   return (
     <section className={styles.problem}>
-      <div className="container">
-        <span className={styles.eyebrow}>Sound familiar?</span>
-        <h2 className={styles.problemHeadline}>{p.title}</h2>
-        {p.body && <p className={styles.sectionBody}>{p.body}</p>}
+      <div className={styles.problemInner}>
+        {p.title && (
+          <h2 className={styles.problemHeadline}>{p.title}</h2>
+        )}
+        {p.body && (
+          <p className={styles.problemBody}>{p.body}</p>
+        )}
       </div>
     </section>
   );
 }
-
 // ─────────────────────────────────────────────────────────────────
 // SOLUTION SECTION
 // ─────────────────────────────────────────────────────────────────
 export function SolutionSection({ product }) {
+  const sols = product.solutions?.filter(s => s.title || s.body) || [];
+
   return (
     <section className={styles.solution}>
-      <div className="container">
-        <span className={styles.eyebrow}>The answer</span>
-        <h2 className={styles.sectionTitle}>{product.name} is different.</h2>
-        <p className={styles.sectionBody}>{product.description}</p>
-        <div className={styles.solutionList}>
-          {product.solutions?.map((s, i) => (
-            <div key={i} className={styles.solutionItem}>
-              <div className={styles.solutionIcon}>{s.icon}</div>
-              <div>
-                <div className={styles.solutionTitle}>{s.title}</div>
-                <div className={styles.solutionBody}>{s.body}</div>
+      <div className={styles.solutionInner}>
+
+        {/* Main solution statement */}
+        <h2 className={styles.solutionHeadline}>
+          {product.name} is <em>different.</em>
+        </h2>
+
+        {product.description && (
+          <p className={styles.solutionBody}>{product.description}</p>
+        )}
+
+        {/* Solution points — centred pill cards */}
+        {sols.length > 0 && (
+          <div className={styles.solutionGrid}>
+            {sols.map((s, i) => (
+              <div key={i} className={styles.solutionCard}>
+                {s.icon && (
+                  <div className={styles.solutionCardIcon}>{s.icon}</div>
+                )}
+                {s.title && (
+                  <div className={styles.solutionCardTitle}>{s.title}</div>
+                )}
+                {s.body && (
+                  <div className={styles.solutionCardBody}>{s.body}</div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
