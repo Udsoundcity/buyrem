@@ -67,9 +67,10 @@
 }
 
 /* ── Solution ── */
+ 
 .solution {
   padding: 80px 0;
-  background: var(--cream);
+  background: #ffffff;
   text-align: center;
 }
 .solutionInner {
@@ -79,11 +80,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
 }
 .solutionHeadline {
   font-family: 'Syne', 'DM Serif Display', serif;
-  font-size: clamp(32px, 7vw, 60px);
+  font-size: clamp(34px, 7.5vw, 64px);
   font-weight: 800;
   color: #1a1a1a;
   line-height: 1.08;
@@ -95,42 +96,34 @@
   font-style: italic;
 }
 .solutionBody {
-  font-size: clamp(16px, 2.2vw, 19px);
+  font-size: clamp(16px, 2.4vw, 20px);
   font-weight: 600;
   color: #3D2314;
   line-height: 1.65;
   margin: 0;
   max-width: 700px;
 }
-/* Simple centred list — no cards */
 .solutionList {
   list-style: none;
-  margin: 8px 0 0;
+  margin: 4px 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 100%;
+  gap: 10px;
   max-width: 640px;
+  width: 100%;
 }
 .solutionItem {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
   text-align: left;
   font-size: clamp(14px, 2vw, 16px);
   color: #3D2314;
   line-height: 1.6;
 }
-.solutionIcon {
-  font-size: 20px;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-.solutionText strong {
-  font-weight: 700;
-  color: #1a1a1a;
-}
+.solutionIcon  { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.solutionText strong { font-weight: 700; color: #1a1a1a; }
 
 /* ── Results ── */
 .results { padding: 56px 0; background: var(--cream); }
@@ -364,85 +357,91 @@
    ───────────────────────────────────────────────────────────────── */
 
 /* ── Embedded Form ── */
+ 
 .formSection {
-  padding: 64px 0 40px;
-  background: var(--cream);
+  background: #2E2C23;
+  padding: 56px 0 48px;
 }
 .formContainer {
   max-width: 700px;
   margin: 0 auto;
   padding: 0 24px;
 }
+ 
+/* Header — white text on dark */
 .formHeader {
   text-align: center;
   margin-bottom: 28px;
 }
+.formTitle {
+  font-family: 'Syne', 'DM Serif Display', serif;
+  font-size: clamp(26px, 5.5vw, 44px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.12;
+  margin: 0 0 14px;
+}
 .formSubtext {
-  font-size: 15px;
-  color: var(--text-m);
-  line-height: 1.7;
-  margin-top: 10px;
+  font-size: clamp(14px, 2vw, 17px);
+  font-weight: 700;
+  color: rgba(240,237,224,0.85);
+  line-height: 1.6;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
  
-/* Caution block */
+/* Caution box — dark container, orange text */
 .formCaution {
-  background: rgba(249,115,22,0.06);
-  border: 2px solid rgba(249,115,22,0.4);
-  border-radius: 14px;
-  padding: 22px 24px;
+  background: #3D3B30;
+  border: 1.5px solid rgba(232,113,26,0.45);
+  border-radius: 12px;
+  padding: 24px 22px;
   margin-bottom: 24px;
   text-align: center;
 }
 .formCautionTitle {
   font-family: 'Syne', 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(16px, 2.5vw, 20px);
+  font-size: clamp(17px, 2.8vw, 22px);
   font-weight: 800;
-  color: #E65C00;
+  color: #E8711A;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 12px;
 }
 .formCautionText {
-  font-size: clamp(13px, 2vw, 15px);
+  font-size: clamp(14px, 2.2vw, 16px);
   font-weight: 600;
-  color: #E65C00;
+  color: #E8711A;
   line-height: 1.75;
   margin: 0;
   white-space: pre-line;
 }
  
-/* Iframe wrapper — polished card */
+/* iframe wrapper — dark, no white card */
 .formBox {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1.5px solid rgba(196,113,74,0.18);
-  box-shadow:
-    0 2px 4px rgba(92,61,46,0.04),
-    0 16px 48px rgba(92,61,46,0.10);
-  overflow: hidden; /* clips the iframe corners */
+  background: #2E2C23;
+  border-radius: 12px;
+  border: 1px solid rgba(240,237,224,0.08);
+  overflow: hidden;
 }
- 
-/* The iframe itself */
 .formFrame {
   width: 100%;
-  /* Cognito iframe.js auto-resizes upward from this baseline.
-     500px prevents a collapsed frame; avoids the old 1200px blank space. */
   min-height: 500px;
   height: auto;
   border: none;
   display: block;
-  /* Gives Cognito's own background a warm tint that matches our palette */
-  background: #fff;
+  background: #2E2C23;
 }
  
 .formNote {
   text-align: center;
   font-size: 13px;
-  /* High enough contrast — not invisible on cream */
-  color: #4B3025;
+  color: rgba(240,237,224,0.55);
   margin-top: 16px;
   font-weight: 500;
 }
+ 
  
 .finger {
   display: inline-block;
@@ -450,6 +449,10 @@
   margin: 0 15px;
   animation: fingerBounce 0.6s ease-in-out infinite;
   filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+}
+.orderTitle {
+  color: white;
+  font-weight: 700;
 }
 
 @keyframes fingerBounce {
@@ -645,18 +648,20 @@
   .topStoryPreCtaImg     { max-height: 220px; }
 }
 @media (max-width: 768px) {
-  .formSection   { padding: 48px 0 28px; }
+  .formSection   { padding: 44px 0 36px; }
   .formContainer { padding: 0; }
   .formHeader    { padding: 0 20px; }
   .formNote      { padding: 0 20px; }
   .formBox       { border-radius: 0; border-left: none; border-right: none; }
   .formCaution   {
     border-radius: 0;
-    margin: 0 0 24px;
+    margin: 0 0 20px;
     border-left: none;
     border-right: none;
   }
 }
+ 
+
 @media (max-width: 480px) {
   .eyebrow {
     gap: 5px;
@@ -673,6 +678,7 @@
   .solution      { padding: 60px 0; }
   .solutionInner { padding: 0 20px; gap: 16px; }
 }
+ 
 
 @media (max-width: 600px) {
   .problem      { padding: 60px 0; }

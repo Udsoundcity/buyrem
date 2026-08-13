@@ -105,17 +105,15 @@ export function ProblemSection({ product }) {
 // ─────────────────────────────────────────────────────────────────
 // SOLUTION SECTION
 // ─────────────────────────────────────────────────────────────────
+// No eyebrow. No cards. Matches Problem section style exactly.
 export function SolutionSection({ product }) {
   const sols = product.solutions?.filter(s => s.title || s.body) || [];
- 
-  // Nothing to show
-  if (!product.name && !product.description && !sols.length) return null;
+  if (!product.description && !sols.length) return null;
  
   return (
     <section className={styles.solution}>
       <div className={styles.solutionInner}>
  
-        {/* Main statement — same visual weight as problemHeadline */}
         <h2 className={styles.solutionHeadline}>
           {product.name} is <em>different.</em>
         </h2>
@@ -124,7 +122,6 @@ export function SolutionSection({ product }) {
           <p className={styles.solutionBody}>{product.description}</p>
         )}
  
-        {/* Solution points — simple centred text rows, no cards */}
         {sols.length > 0 && (
           <ul className={styles.solutionList}>
             {sols.map((s, i) => (
@@ -579,34 +576,37 @@ export function TopStory({ product }) {
 // EMBEDDED FORM
 // ──
 
-// ══ 4. REPLACE export function EmbeddedForm ══════════════════════
-//  Key fix: formFrame uses height:"auto" + smaller min-height
-//  so Cognito dropdown forms don't leave huge blank space below.
+// without affecting other sections that share sectionTitle.
 export function EmbeddedForm({ product }) {
   const formLink = product.formLink;
   if (!formLink) return null;
-
+ 
   const type    = detectFormType(formLink);
   const caution = product.formCaution;
   const hasCaution = caution?.enabled && (caution?.title || caution?.text);
-
+ 
   return (
     <section className={styles.formSection} id="product-form">
       <div className={styles.formContainer}>
-
-        {/* Section header */}
+ 
+        {/* Header — white text on dark background */}
         <div className={styles.formHeader}>
-          <span className={styles.eyebrow}>
+
+          <span className={styles.orderTitle}>
   <span className={styles.finger}>👇</span>
   HOW TO COMPLETE ORDER
   <span className={styles.finger}>👇</span>
 </span>
-          <h2 className={styles.sectionTitle}>Fill The Form To Place Your <em>Order</em></h2>
+
+          <h2 className={styles.formTitle}>
+            Fill the form to place your order
+          </h2>
           <p className={styles.formSubtext}>
-            Payment Is On Delivery!
+           PAYMENT ON DELIVERY
           </p>
         </div>
-
+ 
+        {/* Caution block */}
         {hasCaution && (
           <div className={styles.formCaution}>
             {caution.title && (
@@ -617,7 +617,8 @@ export function EmbeddedForm({ product }) {
             )}
           </div>
         )}
-
+ 
+        {/* Form iframe/script */}
         <div className={styles.formBox}>
           {type === "url" ? (
             <iframe
@@ -635,6 +636,7 @@ export function EmbeddedForm({ product }) {
     </section>
   );
 }
+ 
 
 
 // ─────────────────────────────────────────────────────────────────

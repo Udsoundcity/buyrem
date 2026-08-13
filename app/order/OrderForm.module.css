@@ -5,88 +5,86 @@
 
 /* ── Wrappers ── */
 .wrap {
-  background: #fff;
-  border-radius: 20px;
-  border: 1px solid rgba(196,113,74,0.14);
+  background: #2E2C23;
+  border-radius: 16px;
+  border: 1px solid rgba(240,237,224,0.08);
   padding: 32px 28px;
-  box-shadow:
-    0 2px 4px rgba(92,61,46,0.04),
-    0 12px 40px rgba(92,61,46,0.08);
 }
 .wrapEmbed {
-  background: #fff;
+  background: #2E2C23;
   padding: 24px 20px;
 }
-
+ 
 /* ── Header ── */
 .header      { margin-bottom: 22px; }
 .title {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(20px, 4vw, 26px);
-  color: #1a1a1a;
-  margin-bottom: 6px;
+  font-family: 'Syne', 'DM Serif Display', serif;
+  font-size: clamp(22px, 4.5vw, 30px);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
   line-height: 1.15;
 }
 .subtitle {
   font-size: 14px;
-  color: #4B3025;
+  font-weight: 600;
+  color: rgba(240,237,224,0.7);
   line-height: 1.6;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
 }
-
-/* ── Product info ── */
+ 
+/* ── Product strip ── */
 .product {
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(196,113,74,0.12);
+  border-bottom: 1px solid rgba(240,237,224,0.1);
 }
 .productName {
   font-size: 15px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #F0EDE0;
   margin-bottom: 3px;
 }
 .promoMsg {
   font-size: 13px;
-  font-weight: 600;
-  color: #2A8C52;
+  font-weight: 700;
+  color: #E8711A;
 }
-
+ 
 /* ── Form ── */
 .form { display: flex; flex-direction: column; gap: 16px; }
-
-/* ── Fields ── */
-.field  { display: flex; flex-direction: column; gap: 6px; }
+ 
+/* ── Labels ── */
+.field  { display: flex; flex-direction: column; gap: 7px; }
 .label  {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  /* Dark enough to read against white background */
-  color: #2C1810;
+  color: rgba(240,237,224,0.9);
 }
-.req      { color: #C4714A; }
+.req      { color: #E8711A; }
 .optional {
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
-  color: #7A5240;
+  color: rgba(240,237,224,0.45);
   font-size: 11px;
 }
-
-/* ── Inputs — white bg, clear border, dark text ── */
+ 
+/* ── Inputs — dark bg, light text, subtle border ── */
 .input,
 .textarea,
 .select {
   width: 100%;
-  padding: 13px 16px;
-  /* White background gives full contrast for text and placeholder */
-  background: #ffffff;
-  border: 1.5px solid #D4B89A;
-  border-radius: 12px;
+  padding: 14px 16px;
+  background: #3D3B30;
+  border: 1.5px solid rgba(240,237,224,0.15);
+  border-radius: 10px;
   font-size: 15px;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  /* Dark text — never invisible */
-  color: #1a1a1a;
+  color: #F0EDE0;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   -webkit-appearance: none;
@@ -94,44 +92,38 @@
 .input:focus,
 .textarea:focus,
 .select:focus {
-  border-color: #C4714A;
-  box-shadow: 0 0 0 3px rgba(196,113,74,0.12);
-  background: #fff;
+  border-color: #E8711A;
+  box-shadow: 0 0 0 3px rgba(232,113,26,0.18);
 }
-/* Placeholder clearly visible but lighter than value */
 .input::placeholder,
 .textarea::placeholder {
-  color: #9B7B6B;
+  color: rgba(240,237,224,0.38);
 }
 .textarea { resize: vertical; min-height: 88px; }
-
 .select {
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C4714A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color: #F0EDE0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23E8711A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 40px;
-  /* Ensure dark text in native select */
-  color: #1a1a1a;
 }
-/* Fix for iOS which ignores color on select */
-.select option { color: #1a1a1a; }
-
+.select option { background: #3D3B30; color: #F0EDE0; }
 .fieldError {
   border-color: #E84A4A !important;
-  box-shadow: 0 0 0 3px rgba(232,74,74,0.08) !important;
+  box-shadow: 0 0 0 3px rgba(232,74,74,0.15) !important;
 }
-
-/* ── No tiers message ── */
+ 
+/* ── No-tier message ── */
 .noTiers {
-  background: rgba(251,191,36,0.08);
-  border: 1px solid rgba(251,191,36,0.25);
+  background: rgba(232,113,26,0.08);
+  border: 1px solid rgba(232,113,26,0.25);
   border-radius: 10px;
   padding: 12px 16px;
   font-size: 13px;
-  color: #7A5240;
+  color: rgba(240,237,224,0.8);
 }
-
+ 
 /* ── Tier selector ── */
 .tierList { display: flex; flex-direction: column; gap: 10px; }
 .tierListError {
@@ -144,57 +136,65 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: 12px;
-  border: 1.5px solid #D4B89A;
+  border-radius: 10px;
+  border: 1.5px solid rgba(240,237,224,0.15);
   cursor: pointer;
   transition: border-color 0.18s, background 0.18s;
-  background: #fff;
+  background: #3D3B30;
 }
-.tierOption:hover  { border-color: #C4714A; background: rgba(196,113,74,0.04); }
-.tierSelected      { border-color: #C4714A !important; background: rgba(196,113,74,0.06) !important; }
-.srOnly            { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
-
+.tierOption:hover {
+  border-color: rgba(232,113,26,0.5);
+  background: rgba(232,113,26,0.06);
+}
+.tierSelected {
+  border-color: #E8711A !important;
+  background: rgba(232,113,26,0.1) !important;
+}
+.srOnly {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+}
 .tierIndicator {
   width: 20px; height: 20px;
   border-radius: 50%;
-  border: 2px solid #D4B89A;
+  border: 2px solid rgba(240,237,224,0.3);
   display: flex; align-items: center; justify-content: center;
   transition: all 0.18s;
-  background: #fff;
+  background: transparent;
   flex-shrink: 0;
   margin-top: 2px;
 }
-.tierCheckbox      { border-radius: 5px; }
-.tierIndicatorSelected { border-color: #C4714A; background: #C4714A; }
-.tierCheck         { width: 11px; height: 11px; color: #fff; }
-.tierLabel         { font-size: 14px; color: #1a1a1a; line-height: 1.45; }
-.tierPrice         { font-weight: 700; color: #C4714A; }
-
+.tierCheckbox { border-radius: 5px; }
+.tierIndicatorSelected { border-color: #E8711A; background: #E8711A; }
+.tierCheck     { width: 11px; height: 11px; color: #fff; }
+.tierLabel     { font-size: 14px; color: #F0EDE0; line-height: 1.45; }
+.tierPrice     { font-weight: 700; color: #E8711A; }
+ 
 /* ── Error messages ── */
 .error {
   font-size: 12px;
-  color: #C0392B;
+  color: #FF8A80;
   font-weight: 600;
 }
 .serverError {
-  background: rgba(232,74,74,0.06);
-  border: 1px solid rgba(232,74,74,0.2);
+  background: rgba(232,74,74,0.1);
+  border: 1px solid rgba(232,74,74,0.3);
   border-radius: 10px;
   padding: 12px 16px;
   font-size: 13px;
-  color: #C0392B;
+  color: #FF8A80;
 }
-
-/* ── Submit button ── */
+ 
+/* ── Submit button — orange matching screenshot ── */
 .submit {
   width: 100%;
   padding: 16px;
-  background: #25D366;
-  color: #fff;
+  background: #E8711A;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 800;
   border: none;
-  border-radius: 14px;
+  border-radius: 10px;
   cursor: pointer;
   font-family: 'Plus Jakarta Sans', sans-serif;
   display: flex;
@@ -203,14 +203,15 @@
   gap: 10px;
   transition: all 0.22s;
   margin-top: 4px;
+  letter-spacing: 0.3px;
 }
 .submit:hover:not(:disabled) {
-  background: #1ebe5d;
+  background: #D4611A;
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(37,211,102,0.38);
+  box-shadow: 0 10px 28px rgba(232,113,26,0.4);
 }
-.submit:disabled { opacity: 0.72; cursor: wait; }
-
+.submit:disabled { opacity: 0.65; cursor: wait; }
+ 
 .spinner {
   width: 18px; height: 18px;
   border: 2.5px solid rgba(255,255,255,0.3);
@@ -220,17 +221,17 @@
   flex-shrink: 0;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
+ 
 .note {
   text-align: center;
-  font-size: 11px;
-  /* Enough contrast against white — not invisible */
-  color: #7A5240;
+  font-size: 12px;
+  color: rgba(240,237,224,0.4);
   line-height: 1.5;
 }
-
+ 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-  .wrap  { padding: 24px 18px; border-radius: 16px; }
+  .wrap  { padding: 24px 18px; border-radius: 12px; }
   .title { font-size: 20px; }
 }
+ 
