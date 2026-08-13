@@ -107,37 +107,37 @@ export function ProblemSection({ product }) {
 // ─────────────────────────────────────────────────────────────────
 export function SolutionSection({ product }) {
   const sols = product.solutions?.filter(s => s.title || s.body) || [];
-
+ 
+  // Nothing to show
+  if (!product.name && !product.description && !sols.length) return null;
+ 
   return (
     <section className={styles.solution}>
       <div className={styles.solutionInner}>
-
-        {/* Main solution statement */}
+ 
+        {/* Main statement — same visual weight as problemHeadline */}
         <h2 className={styles.solutionHeadline}>
           {product.name} is <em>different.</em>
         </h2>
-
+ 
         {product.description && (
           <p className={styles.solutionBody}>{product.description}</p>
         )}
-
-        {/* Solution points — centred pill cards */}
+ 
+        {/* Solution points — simple centred text rows, no cards */}
         {sols.length > 0 && (
-          <div className={styles.solutionGrid}>
+          <ul className={styles.solutionList}>
             {sols.map((s, i) => (
-              <div key={i} className={styles.solutionCard}>
-                {s.icon && (
-                  <div className={styles.solutionCardIcon}>{s.icon}</div>
-                )}
-                {s.title && (
-                  <div className={styles.solutionCardTitle}>{s.title}</div>
-                )}
-                {s.body && (
-                  <div className={styles.solutionCardBody}>{s.body}</div>
-                )}
-              </div>
+              <li key={i} className={styles.solutionItem}>
+                {s.icon && <span className={styles.solutionIcon}>{s.icon}</span>}
+                <span className={styles.solutionText}>
+                  {s.title && <strong>{s.title}</strong>}
+                  {s.title && s.body && " — "}
+                  {s.body}
+                </span>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
     </section>

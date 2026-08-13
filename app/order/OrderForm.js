@@ -205,7 +205,7 @@ if (window.self !== window.top) {
           </label>
           <input
             id="full_name" type="text" autoComplete="name"
-            placeholder="e.g. Chidinma Okafor"
+            placeholder="e.g. John Musa"
             className={`${styles.input} ${errors.full_name ? styles.fieldError : ""}`}
             value={form.full_name} onChange={e => update("full_name", e.target.value)}
           />
@@ -221,7 +221,7 @@ if (window.self !== window.top) {
           </label>
           <input
             id="phone" type="tel" inputMode="tel" autoComplete="tel"
-            placeholder="E.g 08012345678"
+            placeholder="E.g 08012345679"
             className={`${styles.input} ${errors.phone ? styles.fieldError : ""}`}
             value={form.phone} onChange={e => update("phone", e.target.value)}
           />
