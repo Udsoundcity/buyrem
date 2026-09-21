@@ -8,7 +8,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "glrupwroyxgrjclonmly.supabase.co",
+        hostname: "gthsbxoxhpftbccrdlxm.supabase.co",
       },
       // Add your own image host here, e.g.:
       // { protocol: "https", hostname: "res.cloudinary.com" },
@@ -28,7 +28,7 @@ const nextConfig = {
       {
         // Allow all Supabase project URLs for uploaded product images
         protocol: "https",
-        hostname: "glrupwroyxgrjclonmly.supabase.co",
+        hostname: "gthsbxoxhpftbccrdlxm.supabase.co",
         pathname: "/storage/v1/object/public/product-images/",
       },
        {
