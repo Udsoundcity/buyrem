@@ -88,34 +88,56 @@ function StatusSelect({ orderId, current, onChange }) {
 function OrderModal({ order, onClose, onStatusChange }) {
   if (!order) return null;
 
-  const [copied, setCopied] = useState(false);
+  const [copied,    setCopied]    = useState(false);
+  const [tierLabel, setTierLabel] = useState(order.tier_label || "");
+
+  // Fetch tier label from form settings for orders that don't have it stored yet
+  useEffect(() => {
+    if (order.tier_label) {
+      setTierLabel(order.tier_label);
+      return;
+    }
+    if (!order.form_id || !order.tier_id) return;
+
+    fetch(`/api/admin/form-settings/${order.form_id}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data?.tiers) return;
+        const tier = data.tiers.find(t => t.id === order.tier_id);
+        if (tier?.label) {
+          const label = tier.price
+            ? `${tier.label} — ₦${Number(tier.price).toLocaleString()}`
+            : tier.label;
+          setTierLabel(label);
+        }
+      })
+      .catch(() => {});
+  }, [order.form_id, order.tier_id, order.tier_label]);
 
   const copyOrder = async () => {
+    const qty = tierLabel || order.tier_label || "—";
     const text = [
-      `Full Name: ${order.full_name || "—"}`,
-      `Phone: ${order.phone || "—"}`,
-      `Address: ${order.address || "—"}`,
-      `State: ${order.state || "—"}`,
-      `Product: ${order.product_name || "—"}`,
-      `Quantity: ${order.offer || order.tier_id || "—"}`,
+      `Full Name: ${order.full_name   || "—"}`,
+      `Phone: ${order.phone           || "—"}`,
+      `Address: ${order.address       || "—"}`,
+      `State: ${order.state           || "—"}`,
+      `Product: ${order.product_name  || "—"}`,
+      `Quantity: ${qty}`,
       `Total Price: ${order.price ? `₦${Number(order.price).toLocaleString()}` : "—"}`,
     ].join("\n");
 
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
     } catch {
-      // Fallback for browsers that block clipboard without HTTPS
       const el = document.createElement("textarea");
       el.value = text;
       document.body.appendChild(el);
       el.select();
       document.execCommand("copy");
       document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
     }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   const rows = [
@@ -123,9 +145,10 @@ function OrderModal({ order, onClose, onStatusChange }) {
     ["Phone",      order.phone],
     ["Address",    order.address],
     ["State",      order.state],
-    ["Product",    order.product_name||"—"],
+    ["Product",    order.product_name || "—"],
+    ["Quantity",   tierLabel || "Loading…"],
     ["Price",      fmtPrice(order.price)],
-    ["Form",       order.form_name||"—"],
+    ["Form",       order.form_name || "—"],
     ["Ordered At", fmtDate(order.created_at)],
     ["Order ID",   order.id],
   ];
