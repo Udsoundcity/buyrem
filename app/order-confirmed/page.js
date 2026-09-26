@@ -64,13 +64,15 @@ function ConfirmationContent() {
         <div className={styles.message}>
           <p>
              {product
-              ? `Your order  for <strong>${product}</strong> has been submitted successfully.`
+              ? `Your order  for <strong> ${product} </strong> has been submitted successfully.`
               : "Your order has been submitted successfully."}
             {" "}Our team has received your details and will process your Order shortly.
           </p>
           <p>
             A representative may reach out to you on WhatsApp or by phone to confirm
             your order and arrange delivery.{" "}
+            <strong>Don Allah, kada ku sake yin wani oda ta yanar gizo, tuni muna kan aikin shirya wannan odar da kuka yi yanzu domin isar da ita.</strong>
+            <strong> Please do not place another order online, we are already processing this order for delivery.</strong>
             <strong>No payment is required until your order arrives.</strong>
           </p>
         </div>
