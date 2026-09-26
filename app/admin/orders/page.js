@@ -87,6 +87,37 @@ function StatusSelect({ orderId, current, onChange }) {
 
 function OrderModal({ order, onClose, onStatusChange }) {
   if (!order) return null;
+
+  const [copied, setCopied] = useState(false);
+
+  const copyOrder = async () => {
+    const text = [
+      `Full Name: ${order.full_name || "—"}`,
+      `Phone: ${order.phone || "—"}`,
+      `Address: ${order.address || "—"}`,
+      `State: ${order.state || "—"}`,
+      `Product: ${order.product_name || "—"}`,
+      `Quantity: ${order.offer || order.tier_id || "—"}`,
+      `Total Price: ${order.price ? `₦${Number(order.price).toLocaleString()}` : "—"}`,
+    ].join("\n");
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // Fallback for browsers that block clipboard without HTTPS
+      const el = document.createElement("textarea");
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
   const rows = [
     ["Full Name",  order.full_name],
     ["Phone",      order.phone],
@@ -134,6 +165,26 @@ function OrderModal({ order, onClose, onStatusChange }) {
           </div>
         ))}
         <div style={{marginTop:20,display:"flex",justifyContent:"flex-end",gap:10}}>
+          <button
+            onClick={copyOrder}
+            style={{
+              padding:"9px 18px",
+              borderRadius:8,
+              border: copied ? "1px solid rgba(34,197,94,0.4)" : "1px solid #334155",
+              background: copied ? "rgba(34,197,94,0.1)" : "none",
+              color: copied ? "#4ADE80" : "#94A3B8",
+              fontSize:13,
+              fontWeight:600,
+              cursor:"pointer",
+              fontFamily:"inherit",
+              transition:"all 0.2s",
+              display:"flex",
+              alignItems:"center",
+              gap:6,
+            }}
+          >
+            {copied ? "✅ Copied!" : "📋 Copy Order"}
+          </button>
           <button className="btn-admin-ghost" onClick={onClose}>Close</button>
         </div>
       </div>
